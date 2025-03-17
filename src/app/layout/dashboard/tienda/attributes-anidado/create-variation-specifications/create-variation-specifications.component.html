@@ -1,0 +1,218 @@
+<div class="h-screen bg-gray-100 lg:p-8 w-full overflow-auto">
+  <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+    <!-- Spinner de carga -->
+    @if (isLoading$ | async) {
+      <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    }
+
+    <!-- Cuerpo de la tarjeta -->
+    <div class="p-8 border-t">
+      <!-- Sección de Título y SKU -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Título -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">Título: (*)</label>
+          <input type="text" name="title" [(ngModel)]="title" disabled class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" placeholder="Por ejemplo: The best notebook collection 2023">
+        </div>
+        <!-- SKU -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">SKU: (*)</label>
+          <input type="text" name="sku" [(ngModel)]="sku" disabled class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" placeholder="Por ejemplo: ZDR456">
+        </div>
+      </div>
+
+      <!-- Sección de Especificaciones y Variaciones -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <!-- Especificaciones -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Especificaciones: (*)</h3>
+          <div class="space-y-4">
+            <!-- Atributos -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Atributos: (*)</label>
+              <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" name="specification_attribute_id" [(ngModel)]="specification_attribute_id" (change)="changeSpecifications()">
+                <option value="">Seleccionar</option>
+                @for (item of attributes_specifications; track item.id) {
+                  <option [value]="item.id">{{ item.name }}</option>
+                }
+              </select>
+            </div>
+            <!-- Campo -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Campo: (*)</label>
+              @switch (type_attribute_specification) {
+                @case (1) {
+                  <input type="text" name="value_add" [(ngModel)]="value_add" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" placeholder="Por ejemplo: The best note">
+                }
+                @case (2) {
+                  <input type="number" name="value_add" [(ngModel)]="value_add" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" placeholder="Por ejemplo: 34566">
+                }
+                @case (3) {
+                  <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" name="departament" [(ngModel)]="propertie_id">
+                    <option value="">Seleccionar</option>
+                    @for (item of properties; track item.id) {
+                      <option [value]="item.id">{{ item.name }}</option>
+                    }
+                  </select>
+                }
+                @case (4) {
+                  <ng-multiselect-dropdown [placeholder]="'custom placeholder'" [settings]="dropdownSettings" [data]="dropdownList" [(ngModel)]="selectedItems" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
+                  </ng-multiselect-dropdown>
+                }
+              }
+            </div>
+            <!-- Botón Agregar -->
+            <div>
+              <button class="w-full px-4 py-2 bg-[#009974] text-white rounded-lg hover:bg-[#007f5f] transition-colors" (click)="save()">Agregar Especificación</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Variaciones -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Variaciones: (*)</h3>
+          <div class="space-y-4">
+            <!-- Atributos -->
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Atributos: (*)</label>
+              <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" name="variations_attribute_id" [(ngModel)]="variations_attribute_id" (change)="changeVariations()">
+                <option value="">Seleccionar</option>
+                @for (item of attributes_variations; track item.id) {
+                  <option [value]="item.id">{{ item.name }}</option>
+                }
+              </select>
+            </div>
+            <!-- Precio y Stock -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Precio Adicional: (Opcional)</label>
+                <input type="number" name="precio_add" [(ngModel)]="precio_add" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" placeholder="Por ejemplo: 15">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Stock: (*)</label>
+                <input type="number" name="stock_add" [(ngModel)]="stock_add" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#009974]" placeholder="Por ejemplo: 15">
+              </div>
+            </div>
+            <!-- Botón Agregar -->
+            <div>
+              <button class="w-full px-4 py-2 bg-[#009974] text-white rounded-lg hover:bg-[#007f5f] transition-colors" (click)="saveVariation()">Agregar Variación</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tablas de Especificaciones y Variaciones -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Tabla de Especificaciones -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Especificaciones Agregadas</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Atributo</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Valor</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                @for (specification of specifications; track specification.id) {
+                  <tr>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10">
+                          <span class="h-10 w-10 rounded-full bg-[#009974]/10 flex items-center justify-center">
+                            <i class="ki-duotone ki-shield-search text-[#009974]"></i>
+                          </span>
+                        </div>
+                        <div class="ml-4">
+                          <div class="text-sm font-medium text-gray-900">{{ specification.attribute.name }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm text-gray-900">{{ getValueAttribute(specification) }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                      <button class="p-2 text-gray-500 hover:text-[#009974]" (click)="editSpecification(specification)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                      </button>
+                      <button class="p-2 text-gray-500 hover:text-red-500" (click)="deleteSpecification(specification)">
+                                          <!-- Icono de eliminar -->
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tabla de Variaciones -->
+        <div>
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Variaciones Agregadas</h3>
+          <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Atributo</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Valor</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Precio</th>
+                  <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Stock</th>
+                  <th class="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                @for (variation of variations; track variation.id) {
+                  <tr>
+                    <td class="px-6 py-4">
+                      <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10">
+                          <span class="h-10 w-10 rounded-full bg-[#009974]/10 flex items-center justify-center">
+                            <i class="ki-duotone ki-scan-barcode text-[#009974]"></i>
+                          </span>
+                        </div>
+                        <div class="ml-4">
+                          <div class="text-sm font-medium text-gray-900">{{ variation.attribute.name }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm text-gray-900">{{ getValueAttribute(variation) }}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm text-gray-500">{{ variation.add_price }}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="text-sm text-gray-500">{{ variation.stock }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                      <button class="p-2 text-gray-500 hover:text-[#009974]" (click)="openAnidado(variation)">
+                        <i class="bi bi-list-ul"></i>
+                      </button>
+                      <button class="p-2 text-gray-500 hover:text-[#009974]" (click)="editVariation(variation)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                        </svg>
+                      </button>
+                      <button class="p-2 text-gray-500 hover:text-red-500" (click)="deleteVariation(variation)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

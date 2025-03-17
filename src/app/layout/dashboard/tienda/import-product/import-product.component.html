@@ -1,0 +1,68 @@
+<section class="flex flex-col justify-center items-center min-h-screen gap-8 lg:p-8 bg-[#F3F4F6] from-purple-50 to-blue-50">
+  <!-- Texto de introducción -->
+  <div class="text-center max-w-2xl">
+    <p class="text-gray-700 text-lg">
+      Si deseas importar tus productos masivamente, sigue la siguiente plantilla de Excel para poder hacerlo.
+      <a
+        href="/public/Ejemplo-importar-productos.xlsx"
+        download
+        class="text-blue-600 hover:text-blue-800 underline transition-colors"
+      >
+        Descargar aquí 👈🏻
+      </a>
+    </p>
+  </div>
+
+  <!-- Card de importación -->
+  <div class="bg-white p-8 rounded-xl shadow-2xl w-full md:max-w-2xl border border-gray-100">
+    <!-- Encabezado -->
+    <div class="flex flex-col gap-2 text-center pb-6">
+      <span class="text-3xl font-bold text-gray-800">Importar archivo</span>
+      <span class="text-sm text-gray-500">Selecciona el archivo que deseas importar.</span>
+    </div>
+
+    <!-- Área de arrastrar y soltar -->
+    <div class="border-2 border-dashed border-gray-300 p-8 rounded-lg flex flex-col items-center gap-6 bg-gray-50 hover:bg-gray-100 transition-colors">
+      <!-- Ícono de subida -->
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        class="w-16 h-16 text-gray-400"
+      >
+        <path d="M14 3v4a1 1 0 0 0 1 1h4"></path>
+        <path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"></path>
+        <path d="M12 11v6"></path>
+        <path d="M9.5 13.5l2.5 -2.5l2.5 2.5"></path>
+      </svg>
+
+      <!-- Formulario de importación -->
+      <form  class="flex flex-col gap-4 w-full">
+        <!-- Input de archivo -->
+        <input
+          class="w-full px-4 py-3 rounded-lg border-2 border-gray-200 bg-white text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+          type="file"
+
+          accept=".csv"
+          required
+          placeholder="Selecciona un archivo"
+        />
+
+        <!-- Botón de importar -->
+        <button
+          class="w-full px-6 py-3 bg-[#009974] hover:bg-indigo-700 text-white font-semibold rounded-lg shadow-md
+          transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          type="submit"
+
+        >
+          Importar Productos
+        </button>
+      </form>
+
+    </div>
+  </div>
+</section>

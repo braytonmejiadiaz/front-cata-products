@@ -1,0 +1,68 @@
+<div class="overflow-auto h-screen lg:p-8 bg-gray-100">
+<section class="bg-white p-6 rounded-lg shadow-sm  h-[100%] overflow-auto">
+
+  <!-- Encabezado con imagen de fondo -->
+  <div class="p-6 h-[25%] rounded-lg">
+    <img src="/banner-profile.jpg" alt="" class="w-full h-full object-cover rounded-lg">
+  </div>
+
+  <!-- Información del negocio -->
+  <div class="flex flex-col sm:flex-row items-center gap-6 -mt-8">
+    <div class="p-1 w-24 h-24 bg-gray-100 rounded-full shadow-sm hover:scale-105 transition-transform">
+      <img class="w-full h-full rounded-full object-cover" src="{{avatar}}" alt="logo de la empresa">
+    </div>
+    <div class="flex flex-col">
+      <span class="text-2xl font-semibold text-gray-900">{{store_name}}</span>
+      <span class="text-gray-600">Responsable: {{name}} {{surname}}</span>
+    </div>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="flex justify-end gap-4 mt-6">
+    <button class="bg-[#009974] p-2 rounded-lg text-white font-semibold hover:bg-gray-700 transition-colors" type="button" (click)="updateUser()">Actualizar datos</button>
+    <button class="bg-blue-600 p-2 rounded-lg text-white font-semibold hover:bg-blue-500 transition-colors" type="button" (click)="onLogout()">Salir</button>
+  </div>
+
+  <div class="border-b border-gray-200 my-8"></div>
+
+  <!-- Apartado de mi perfil -->
+  <div class="flex flex-col sm:flex-row items-start gap-8 p-6 bg-white rounded-lg shadow-sm">
+    <div class="flex flex-col w-full sm:w-1/2">
+      <span class="text-xl font-semibold text-gray-900">Mi perfil</span>
+      <span class="text-gray-500">Esto se mostrará en tu tienda</span>
+
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 w-full gap-6">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="name">Nombre</label>
+        <input type="text" name="name" [(ngModel)]="name" placeholder="Nombre" class="border border-gray-300 p-2 rounded-lg text-sm focus:outline-none focus:border-gray-500">
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="apellido">Apellido</label>
+        <input type="text" name="surname" [(ngModel)]="surname" placeholder="Apellido" class="border border-gray-300 p-2 rounded-lg text-sm focus:outline-none focus:border-gray-500">
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="telefono">Teléfono</label>
+        <input type="text" name="phone" [(ngModel)]="phone" placeholder="Teléfono" class="border border-gray-300 p-2 rounded-lg text-sm focus:outline-none focus:border-gray-500">
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="correo">Correo</label>
+        <input type="text" name="emai" [(ngModel)]="email" placeholder="Correo electronico" class="border border-gray-300 p-2 rounded-lg text-sm focus:outline-none focus:border-gray-500">
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="store_name">Nombre de tu negocio</label>
+        <input type="text" name="store_name" [(ngModel)]="store_name" placeholder="Nombre de tu negocio" class="border border-gray-300 p-2 rounded-lg text-sm focus:outline-none focus:border-gray-500">
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="address">Dirección de tu negocio</label>
+        <input type="text" name="address" [(ngModel)]="address" placeholder="Dirección de tu negocio" class="border border-gray-300 p-2 rounded-lg text-sm focus:outline-none focus:border-gray-500">
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700" for="slug">Link de tu tienda</label>
+        <input type="text" name="slug" [(ngModel)]="storeUrl" placeholder="Mi tienda" class="border border-gray-300 p-2 rounded-lg text-sm focus:outline-none focus:border-gray-500">
+      </div>
+    </div>
+  </div>
+
+</section>
+</div>

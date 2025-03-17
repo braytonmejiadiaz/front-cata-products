@@ -1,0 +1,61 @@
+<!-- component -->
+<section class="flex flex-col md:flex-row h-screen items-center ">
+
+  <!-- Imagen para móviles y tablets -->
+  <div class="block lg:hidden w-full h-1/3 md:h-1/2">
+    <img src="/vente-login.jpg" alt="" class="w-full h-full object-cover">
+  </div>
+
+  <!-- Contenedor del formulario -->
+  <div class="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-auto md:h-screen px-6 lg:px-16 xl:px-12
+        flex items-center justify-center py-8 md:py-0">
+
+    <div class="w-full h-100">
+      <h1 class="text-2xl md:text-3xl font-bold leading-tight mt-4 text-gray-800">Bienvenido de nuevo</h1>
+      <p class="text-gray-600 mt-2">Ingresa con tu cuenta aquí</p>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="mt-6">
+        <div>
+          <label class="block text-gray-700">Dirección de correo</label>
+          <div class="relative mt-2">
+            <input formControlName="email" type="email" name="" id="" placeholder="Ingresa tu dirección de correo"
+              class="w-full px-4 py-3 rounded-lg bg-gray-100 border-2 border-gray-200 focus:border-[#009974] focus:bg-white focus:outline-none transition duration-200" autofocus autocomplete required>
+            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label class="block text-gray-700">Contraseña</label>
+          <div class="relative mt-2">
+            <input type="password" name="" id="password" placeholder="Ingresa tu contraseña" minlength="6" formControlName="password"
+              class="w-full px-4 py-3 rounded-lg bg-gray-100 border-2 border-gray-200 focus:border-[#009974] focus:bg-white focus:outline-none transition duration-200" required>
+            <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400">
+              <i class="fas fa-lock"></i>
+            </span>
+          </div>
+        </div>
+
+        <div class="text-right mt-2">
+          <a href="#" class="text-sm font-semibold text-[#009974] hover:text-[#007a5c] focus:text-[#007a5c] transition duration-200">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="w-full block bg-[#009974] hover:bg-[#007a5c] focus:bg-[#007a5c] text-white font-semibold rounded-lg
+              px-4 py-3 mt-6 transition duration-200" (keydown.enter)="login()">Ingresar</button>
+
+      </form>
+      <hr class="my-6 border-gray-300 w-full">
+
+      <p class="mt-8 text-gray-600">¿Aún no tienes una cuenta?
+         <a href="/registro" class="text-[#009974] hover:text-[#007a5c] font-semibold transition duration-200">Crear ahora</a></p>
+
+    </div>
+  </div>
+
+  <!-- Imagen para pantallas grandes (lg y superiores) -->
+  <div class="hidden lg:block w-full md:w-1/2 xl:w-2/3 h-screen">
+    <img src="/vente-login.jpg" alt="" class="w-full h-full object-cover">
+  </div>
+
+</section>

@@ -1,0 +1,58 @@
+<div class="bg-gray-100 w-full shadow-sm h-[100%]">
+  <div class="pt-50 sm:pt-20"></div>
+  <app-header></app-header>
+
+  <div class="flex flex-col items-center justify-center h-screen bg-gray-100 p-6">
+    <div class="bg-white shadow-lg rounded-2xl p-8 max-w-2xl w-full">
+
+      <!-- Sección de título -->
+      <header class="text-center mb-8">
+        <h1 class="text-4xl font-bold text-gray-800">Sobre Nosotros</h1>
+        <p class="text-gray-600 mt-3">{{usuario.description}}</p>
+      </header>
+
+      <!-- Sección de información de contacto -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Teléfono -->
+        <div class="bg-blue-50 p-5 rounded-xl text-center transition-transform hover:scale-105">
+          <i class="fas fa-phone text-blue-500 text-3xl mb-3"></i>
+          <p class="text-gray-700 font-semibold">Teléfono</p>
+            <span class="text-gray-600">{{usuario.phone}}</span>
+        </div>
+
+        <!-- Correo -->
+        <div class="bg-red-50 p-5 rounded-xl text-center transition-transform hover:scale-105">
+          <i class="fas fa-envelope text-red-500 text-3xl mb-3"></i>
+          <p class="text-gray-700 font-semibold">Correo</p>
+          <span class="text-gray-600">{{usuario.email}}</span>
+        </div>
+
+        <!-- Dirección -->
+        <div class="bg-green-50 p-5 rounded-xl text-center md:col-span-2 transition-transform hover:scale-105">
+          <i class="fas fa-map-marker-alt text-green-500 text-3xl mb-3"></i>
+          <p class="text-gray-700 font-semibold">Dirección</p>
+          <span class="text-gray-600">{{usuario.address}}</span>
+        </div>
+      </section>
+
+      <!-- Sección de misión y visión -->
+      <section class="space-y-8">
+        <!-- Misión -->
+        <div class="text-center">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-3">Nuestra Misión</h2>
+          <p class="text-gray-600">Brindar soluciones innovadoras y de calidad para nuestros clientes, garantizando satisfacción y confianza.</p>
+        </div>
+
+        <!-- Visión -->
+        <div class="text-center">
+          <h2 class="text-2xl font-semibold text-gray-800 mb-3">Nuestra Visión</h2>
+          <p class="text-gray-600">Ser la empresa líder en nuestro sector, destacando por nuestro compromiso y excelencia en el servicio.</p>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+
+  <app-footer></app-footer>
+</div>

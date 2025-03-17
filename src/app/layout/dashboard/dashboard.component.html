@@ -1,0 +1,484 @@
+<div class="flex">
+  <!-- Botón para abrir/cerrar el sidebar en móviles -->
+  <button
+    (click)="toggleSidebar()"
+    class="fixed z-50 p-2 text-gray-600 bg-white rounded-md shadow-sm lg:hidden top-4 left-4 focus:outline-none"
+  >
+    <svg
+      class="w-6 h-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M4 6h16M4 12h16M4 18h16"
+      />
+    </svg>
+  </button>
+
+  <!-- Sidebar -->
+  <aside
+    [class.transform]="!isSidebarOpen"
+    [class.-translate-x-full]="!isSidebarOpen"
+    [class.lg:translate-x-0]="true"
+    class="fixed inset-y-0 z-40 flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-gray-50 border-r border-gray-200 transition-transform duration-200 ease-in-out lg:static lg:transform-none"
+  >
+    <!-- Logo -->
+    <a  class="flex items-center justify-center">
+      <img
+        class="w-auto h-8"
+        src="https://merakiui.com/images/logo.svg"
+        alt="logo"
+      />
+    </a>
+
+    <hr class="my-2 border-gray-200" />
+
+    <!-- Menú de navegación -->
+    <nav class="flex-1 mt-6 space-y-4">
+      <!-- Mi Tienda -->
+      <div>
+        <a
+          routerLink="/dashboard/mi-tienda"
+          routerLinkActive="bg-[#009974] text-white"
+          class="flex items-center px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+          (click)="onLinkClick()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m1-10V9a1 1 0 00-1-1h-3m-6 0a1 1 0 011-1h11a1 1 0 011 1v2.284m-1.592 4.291A3 3 0 0112 19.584m-3.418-.592a3 3 0 01-2.174-2.457m2.457.592a3 3 0 012.174 2.457m.318-.592a3 3 0 012.495-2.174m-.318.592a3 3 0 01-2.495 2.174"
+            />
+          </svg>
+          <span class="ml-3">Mi Tienda</span>
+        </a>
+      </div>
+
+      <hr class="my-2 border-gray-200" />
+
+      <!-- Productos -->
+      <div>
+        <button
+          (click)="toggleSubMenu('productos')"
+          class="flex items-center justify-between w-full px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
+        >
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 15h14M5 15a2 2 0 110-4h14a2 2 0 110 4M5 22h14M5 22a2 2 0 110-4h14a2 2 0 110 4"
+              />
+            </svg>
+            <span class="ml-3">Productos</span>
+          </div>
+          <svg
+            class="w-4 h-4 transition-transform"
+            [class.rotate-180]="isSubMenuOpen['productos']"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 9L12 16L5 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div
+          *ngIf="isSubMenuOpen['productos']"
+          class="ml-6 space-y-2"
+        >
+          <a
+            routerLink="/dashboard/crear-producto"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Crear producto</a
+          >
+          <a
+            routerLink="/dashboard/lista-productos"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Lista de productos</a
+          >
+          <a
+            routerLink="/dashboard/importar-productos"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Subir masivamente</a
+          >
+        </div>
+      </div>
+
+      <hr class="my-2 border-gray-200" />
+
+      <!-- Categorías -->
+      <div>
+        <button
+          (click)="toggleSubMenu('categorias')"
+          class="flex items-center justify-between w-full px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
+        >
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h7"
+              />
+            </svg>
+            <span class="ml-3">Categorías</span>
+          </div>
+          <svg
+            class="w-4 h-4 transition-transform"
+            [class.rotate-180]="isSubMenuOpen['categorias']"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 9L12 16L5 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div
+          *ngIf="isSubMenuOpen['categorias']"
+          class="ml-6 space-y-2"
+        >
+          <a
+            routerLink="/dashboard/categories/list"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Lista de categorías</a
+          >
+          <a
+            routerLink="/dashboard/categories/register"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Crear categoría</a
+          >
+        </div>
+      </div>
+
+      <hr class="my-2 border-gray-200" />
+
+      <!-- Atributos -->
+      <div>
+        <button
+          (click)="toggleSubMenu('atributos')"
+          class="flex items-center justify-between w-full px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
+        >
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8V4m0 8a2 2 0 100 4m0-4a2 2 0 110 4m12-8V4m0 8a2 2 0 100 4m0-4a2 2 0 110 4"
+              />
+            </svg>
+            <span class="ml-3">Atributos</span>
+          </div>
+          <svg
+            class="w-4 h-4 transition-transform"
+            [class.rotate-180]="isSubMenuOpen['atributos']"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 9L12 16L5 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div
+          *ngIf="isSubMenuOpen['atributos']"
+          class="ml-6 space-y-2"
+        >
+          <a
+            routerLink="/dashboard/attributes/list"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Lista de atributos</a
+          >
+        </div>
+      </div>
+
+      <hr class="my-2 border-gray-200" />
+
+      <!-- Marcas -->
+      <div>
+        <button
+          (click)="toggleSubMenu('marcas')"
+          class="flex items-center justify-between w-full px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
+        >
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
+              />
+            </svg>
+            <span class="ml-3">Marcas</span>
+          </div>
+          <svg
+            class="w-4 h-4 transition-transform"
+            [class.rotate-180]="isSubMenuOpen['marcas']"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 9L12 16L5 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div
+          *ngIf="isSubMenuOpen['marcas']"
+          class="ml-6 space-y-2"
+        >
+          <a
+            routerLink="/dashboard/brands/list"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Lista de marcas</a
+          >
+        </div>
+      </div>
+
+      <hr class="my-2 border-gray-200" />
+
+      <!-- Sliders -->
+      <div>
+        <button
+          (click)="toggleSubMenu('sliders')"
+          class="flex items-center justify-between w-full px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
+        >
+          <div class="flex items-center">
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              />
+            </svg>
+            <span class="ml-3">Sliders</span>
+          </div>
+          <svg
+            class="w-4 h-4 transition-transform"
+            [class.rotate-180]="isSubMenuOpen['sliders']"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 9L12 16L5 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div
+          *ngIf="isSubMenuOpen['sliders']"
+          class="ml-6 space-y-2"
+        >
+          <a
+            routerLink="/dashboard/slider/list"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Lista de Sliders</a
+          >
+          <a
+            routerLink="/dashboard/slider/crear"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Crear Sliders</a
+          >
+        </div>
+      </div>
+
+      <hr class="my-2 border-gray-200" />
+
+      <!-- Ajustes -->
+      <div>
+        <button
+          (click)="toggleSubMenu('preferencias')"
+          class="flex items-center justify-between w-full px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900 focus:outline-none"
+        >
+          <div class="flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-5 h-5"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0Z"
+              />
+            </svg>
+            <span class="ml-3">Ajustes</span>
+          </div>
+          <svg
+            class="w-4 h-4 transition-transform"
+            [class.rotate-180]="isSubMenuOpen['preferencias']"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 9L12 16L5 9"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </button>
+        <div
+          *ngIf="isSubMenuOpen['preferencias']"
+          class="ml-6 space-y-2"
+        >
+          <a
+            routerLink="/dashboard/preferencias/informacion-general"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Información general</a
+          >
+          <a
+            routerLink="/dashboard/preferencias/ajustes-generales"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >Logo banner y colores</a
+          >
+          <a
+            routerLink="/dashboard/preferencias/url-qr"
+            routerLinkActive="bg-[#009974] text-white"
+            class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+            (click)="onLinkClick()"
+            >URL y código QR</a
+          >
+        </div>
+      </div>
+    </nav>
+
+    <!-- Perfil del usuario -->
+    <a routerLink="/dashboard/mi-perfil" class="mt-auto" (click)="onLinkClick()">
+      <div
+        class="flex items-center justify-between px-4 py-3 bg-white rounded-md shadow-sm hover:bg-gray-100"
+      >
+        <div class="flex items-center space-x-3">
+          @if (avatar) {
+          <img
+            class="object-cover rounded-full h-9 w-9"
+            [src]="avatar"
+            alt="avatar"
+          />
+          } @else {
+          <img
+            class="object-cover rounded-full h-9 w-9"
+            src="https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80"
+            alt="avatar por defecto"
+          />
+          }
+          <span class="text-sm font-medium text-gray-800">{{ name }}</span>
+        </div>
+        <button class="text-gray-500 hover:text-gray-700 focus:outline-none">
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+      </div>
+    </a>
+  </aside>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 w-full overflow-x-hidden">
+    <router-outlet></router-outlet>
+  </div>
+</div>

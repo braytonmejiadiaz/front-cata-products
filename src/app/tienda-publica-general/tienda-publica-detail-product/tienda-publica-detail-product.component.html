@@ -1,0 +1,91 @@
+<div class="min-h-screen flex flex-col bg-[#F3F3F2]">
+  <app-header class="flex-shrink-0"></app-header>
+  <div class="pt-35"></div>
+  <!-- Contenido principal -->
+  <main class="flex-grow">
+    @if (isLoading) {
+      <!-- Spinner de carga -->
+      <div class="flex justify-center items-center h-96">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    } @else if (product) {
+      <!-- Detalles del producto -->
+      <div class="w-3/4 mx-auto w-full sm:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-white">
+        <!-- Imagen del producto -->
+        <div class="flex items-center justify-center">
+          <img
+            [src]="product.imagen"
+            alt="{{ product.title }}"
+            class="w-full h-auto max-h-96 object-cover rounded-lg shadow-md"
+          />
+        </div>
+
+        <!-- Información del producto -->
+        <div class="space-y-6">
+          <h1 class="text-3xl font-bold text-gray-900">{{ product.title }}</h1>
+          <div class="space-y-2">
+            <p class="text-gray-700 text-xl font-semibold">{{ product.price_cop | currency:'COP':'symbol-narrow':'1.0-0'  }} COP</p>
+          </div>
+
+          <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+          <!-- Selector de cantidad -->
+          <label for="quantity" class="block text-gray-700 font-semibold mb-2">Cantidad:</label>
+          <div class="flex flex-wrap gap-8">
+            <div class="flex items-center gap-4">
+              <button
+                (click)="decreaseQuantity()"
+                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                -
+              </button>
+              <input
+                type="number"
+                id="quantity"
+                [(ngModel)]="quantity"
+                class="w-16 text-center border border-gray-300 rounded-lg px-3 py-2"
+                min="1"
+              />
+              <button
+                (click)="increaseQuantity()"
+                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                +
+              </button>
+            </div>
+
+            <button
+              (click)="addToCart(product, quantity)"
+              class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg transition-colors cursor-pointer shadow-md"
+              [ngStyle]="{'background-color':usuario.button_color}"
+            >
+              Añadir al carrito ({{ quantity }})
+            </button>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="mt-6 flex flex-col md:flex-row gap-4">
+            <button
+              (click)="buyOnWhatsApp(product, quantity)"
+              class="w-full md:w-auto px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 cursor-pointer transition-colors shadow-md flex items-center justify-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+                <path d="M19.077 4.928C17.191 3.041 14.683 2 12 2 6.486 2 2 6.486 2 12c0 1.797.5 3.574 1.441 5.111L2 22l5.006-1.441C8.574 21.5 10.351 22 12 22c5.514 0 10-4.486 10-10 0-2.683-1.041-5.191-2.923-7.072zm-7.077 11.72h-.008v-.008h.008v.008zm4.24-8.24c-.297 0-.672.224-.672.672v4.464c0 .448.376.672.672.672.297 0 .672-.224.672-.672V8.88c0-.448-.376-.672-.672-.672zm-8.48 0c-.297 0-.672.224-.672.672v4.464c0 .448.376.672.672.672.297 0 .672-.224.672-.672V8.88c0-.448-.376-.672-.672-.672z"/>
+              </svg>
+              Comprar por WhatsApp ({{ quantity }})
+            </button>
+          </div>
+          <p class="text-gray-600 leading-relaxed">
+            <span class="font-bold">Marca:</span>
+            {{ product.brand.name }}
+          </p>
+        </div>
+      </div>
+    } @else {
+      <!-- Mensaje si no se encuentra el producto -->
+      <div class="p-8 text-center">
+        <p class="text-gray-600 text-xl">No se encontraron detalles del producto.</p>
+      </div>
+    }
+  </main>
+  <app-footer class="flex-shrink-0"></app-footer>
+</div>

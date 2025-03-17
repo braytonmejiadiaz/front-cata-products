@@ -1,0 +1,133 @@
+<div class="h-screen bg-gray-100 lg:p-8 w-full">
+
+<div class="bg-white rounded-lg shadow-sm h-[100%] overflow-auto">
+  <!-- Spinner -->
+  @if (isLoading$ | async) {
+    <div class="flex justify-center py-4">
+      <span class="spinner-border spinner-border-sm text-[#009974]"></span>
+    </div>
+  }
+
+  <!-- Card Header -->
+  <div class="flex justify-between items-center p-6 border-b border-gray-200">
+    <!-- Search Input -->
+    <div class="relative flex-grow max-w-md">
+      <input
+        type="text"
+        (keyup.enter)="searchTo()"
+        [(ngModel)]="search"
+        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#009974] focus:border-transparent placeholder-gray-400 text-gray-900 transition-all"
+        placeholder="Buscar atributos"
+      />
+      <i class="absolute left-3 top-2.5 text-gray-400">
+        <!-- Icono de búsqueda (puedes usar un SVG o una librería de iconos) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+        </svg>
+      </i>
+    </div>
+
+    <!-- Add Attribute Button -->
+    <button
+      (click)="openModalCreateAttribute()"
+      class="flex items-center px-4 py-2 bg-[#009974] text-white rounded-lg hover:bg-[#007a5c] transition-all"
+    >
+      <i class="mr-2">
+        <!-- Icono de agregar (puedes usar un SVG o una librería de iconos) -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+        </svg>
+      </i>
+      Añadir atributo
+    </button>
+  </div>
+
+  <!-- Card Body -->
+  <div class="p-6">
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo De Atributo</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N° de Propiedades</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha de Creación</th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acción</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          @for (attribute of attributes; track attribute.id) {
+            <tr class="hover:bg-gray-50 transition-all">
+              <!-- Nombre -->
+              <td class="px-6 py-4">
+                <span class="text-sm text-gray-900">{{ attribute.name }}</span>
+              </td>
+
+              <!-- Tipo De Atributo -->
+              <td class="px-6 py-4">
+                <span class="text-sm text-gray-900">{{ getNameAttribute(attribute.type_attribute) }}</span>
+              </td>
+
+              <!-- State -->
+              <td class="px-6 py-4">
+                @if (attribute.state == 1) {
+                  <span class="px-2 py-1 text-sm font-semibold bg-green-100 text-green-800 rounded-full">Activo</span>
+                } @else {
+                  <span class="px-2 py-1 text-sm font-semibold bg-red-100 text-red-800 rounded-full">Inactivo</span>
+                }
+              </td>
+
+              <!-- N° de Propiedades -->
+              <td class="px-6 py-4">
+                <span class="text-sm text-gray-900">{{ attribute.properties.length }}</span>
+              </td>
+
+              <!-- Fecha de Creación -->
+              <td class="px-6 py-4">
+                <span class="text-sm text-gray-900">{{ attribute.created_at }}</span>
+              </td>
+
+              <!-- Actions -->
+              <td class="px-6 py-4 text-right">
+                <div class="flex justify-end space-x-2">
+                  @if (attribute.type_attribute == 3 || attribute.type_attribute == 4) {
+                    <button
+                      (click)="openModalRegisterProperties(attribute)"
+                      class="p-2 text-gray-500 hover:text-[#009974] transition-all"
+                    >
+                      <!-- Icono de switch -->
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+                  }
+                  <button
+                    (click)="openModalEditAttribute(attribute)"
+                    class="p-2 text-gray-500 hover:text-[#009974] transition-all"
+                  >
+                    <!-- Icono de editar -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                  <button
+                    (click)="deleteAttribute(attribute)"
+                    class="p-2 text-gray-500 hover:text-red-500 transition-all"
+                  >
+                    <!-- Icono de eliminar -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>

@@ -1,0 +1,212 @@
+<div class="bg-[#F0F2F4] min-h-screen lg:p-8">
+  <div class="bg-white rounded-lg shadow overflow-hidden w-full">
+    <!-- Header -->
+    <div class="px-4 py-5 sm:p-6 border-b border-gray-200">
+      <h3 class="text-lg leading-6 font-medium text-gray-900">
+        Editar producto
+      </h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">
+        Aquí puedes añadir la información básica del producto.
+      </p>
+    </div>
+
+    <!-- Form Body -->
+    <div class="p-4 sm:p-6">
+      <!-- Spinner -->
+      @if (isLoading$ | async) {
+        <div class="flex justify-center py-6">
+          <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-[#546E7A] border-solid"></div>
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <!-- Left Column -->
+          <div class="space-y-4">
+            <!-- Title -->
+            <div>
+              <label for="title" class="block text-sm font-medium text-gray-700">
+                Título del producto
+              </label>
+              <div class="mt-1">
+                <input type="text" name="title" id="title" [(ngModel)]="title"
+                  class="shadow-sm focus:ring-[#009974] focus:border-[#009974] block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3 bg-white"
+                  placeholder="Ej: Camiseta de algodón orgánico" />
+              </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="description" class="block text-sm font-medium text-gray-700">
+                Descripción
+              </label>
+              <div class="mt-1">
+                <textarea rows="3" name="description" id="description" [(ngModel)]="description"
+                  class="shadow-sm focus:ring-[#009974] focus:border-[#009974] block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3 bg-white"
+                  placeholder="Describe tu producto aquí..."></textarea>
+              </div>
+            </div>
+
+            <!-- Pricing -->
+            <div>
+              <label for="price_cop" class="block text-sm font-medium text-gray-700">
+                Precio
+              </label>
+              <div class="mt-1 relative rounded-md shadow-sm">
+                <input type="number" name="price_cop" id="price_cop" [(ngModel)]="price_cop"
+                  class="focus:ring-[#009974] focus:border-[#009974] block w-full pr-12 sm:text-sm border-gray-300 rounded-md py-2 px-3 bg-white"
+                  placeholder="0.00">
+              </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label for="categorie_first_id" class="block text-sm font-medium text-gray-700">Departamento (*)</label>
+                <select id="categorie_first_id" [(ngModel)]="categorie_first_id" name="categorie_first_id"
+                  (change)="changeDepartamento()"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#009974] focus:ring-[#009974] sm:text-sm py-2 px-3 bg-white">
+                  <option value="" disabled>Selecciona un departamento</option>
+                  @for (item of categories_first; track item.id) {
+                    <option [value]="item.id">{{ item.name }}</option>
+                  }
+                </select>
+              </div>
+              <div>
+                <label for="categorie_second_id" class="block text-sm font-medium text-gray-700">Categoría (Opcional)</label>
+                <select id="categorie_second_id" [(ngModel)]="categorie_second_id" name="categorie_second_id"
+                  (change)="changeCategorie()"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#009974] focus:ring-[#009974] sm:text-sm py-2 px-3 bg-white">
+                  <option value="" disabled>Selecciona una categoría</option>
+                  @for (item of categories_seconds_backups; track item.id) {
+                    <option [value]="item.id">{{ item.name }}</option>
+                  }
+                </select>
+              </div>
+              <div>
+                <label for="categorie_third_id" class="block text-sm font-medium text-gray-700">Subcategoría (Opcional)</label>
+                <select id="categorie_third_id" [(ngModel)]="categorie_third_id" name="categorie_third_id"
+                  class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#009974] focus:ring-[#009974] sm:text-sm py-2 px-3 bg-white">
+                  <option value="" disabled>Selecciona una subcategoría</option>
+                  @for (item of categories_thirds_backups; track item.id) {
+                    <option [value]="item.id">{{ item.name }}</option>
+                  }
+                </select>
+              </div>
+              <div>
+                <label for="sku" class="block text-sm font-medium text-gray-700">
+                  SKU (Referencia)
+                </label>
+                <div class="mt-1">
+                  <input type="text" name="sku" id="sku" [(ngModel)]="sku"
+                    class="shadow-sm focus:ring-[#009974] focus:border-[#009974] block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3 bg-white"
+                    placeholder="Ej: SKU-2021" />
+                </div>
+              </div>
+                          <!-- Status -->
+            <div>
+              <label for="state" class="block text-sm font-medium text-gray-700">
+                Estado
+              </label>
+              <select id="state" name="state" [(ngModel)]="state"
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[#009974] focus:border-[#009974] sm:text-sm rounded-md bg-white">
+                <option value="1">Pendiente</option>
+                <option value="2">Público</option>
+              </select>
+            </div>
+            </div>
+
+
+            <!-- Tags -->
+            <div>
+              <label for="word" class="block text-sm font-medium text-gray-700">
+                Tags
+              </label>
+              <div class="mt-1">
+                <input type="text" name="word" id="word" [(ngModel)]="word" (keyup.enter)="addItems()"
+                  class="shadow-sm focus:ring-[#009974] focus:border-[#009974] block w-full sm:text-sm border-gray-300 rounded-md py-2 px-3 bg-white"
+                  placeholder="Ej: Algodón, Verano, Casual" />
+              </div>
+            </div>
+            @if (!isShowMultiselect) {
+              <div>
+                <label class="block text-sm font-medium text-gray-700">Tags:</label>
+                <ng-multiselect-dropdown [placeholder]="'Selecciona tags'" [settings]="dropdownSettings"
+                  [data]="dropdownList" [(ngModel)]="selectedItems" (onSelect)="onItemSelect($event)"
+                  (onSelectAll)="onSelectAll($event)">
+                </ng-multiselect-dropdown>
+              </div>
+            }
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-4">
+            <!-- Media -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700">
+                Media
+              </label>
+
+              <!-- Main Image Upload -->
+              <div class="mt-2">
+                <label for="main-image-upload"
+                  class="relative cursor-pointer bg-white border border-gray-300 rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#009974] focus:border-[#009974] block w-full text-center">
+                  Subir imagen principal
+                  <input id="main-image-upload" name="main-image-upload" type="file" class="sr-only"
+                    (change)="processFile($event)" />
+                </label>
+              </div>
+
+              <!-- Main Image Preview -->
+              @if (imagen_previsualiza) {
+                <div class="mt-2">
+                  <img [src]="imagen_previsualiza" alt="Vista previa"
+                    class="w-full h-48 object-cover rounded-md border border-gray-200" />
+                </div>
+              }
+
+              <!-- Additional Images Upload -->
+              <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700">Imágenes Adicionales</label>
+                <div class="mt-2">
+                  <label for="additional-images-upload"
+                    class="relative cursor-pointer bg-white border border-gray-300 rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#009974] focus:border-[#009974] block w-full text-center">
+                    Subir imágenes adicionales
+                    <input id="additional-images-upload" name="additional-images-upload" type="file" multiple
+                      class="sr-only" (change)="processFileTwo($event)" />
+                  </label>
+                </div>
+              </div>
+
+              <!-- Image List -->
+              <div class="mt-4">
+                <h4 class="text-sm font-medium text-gray-700">Imágenes Subidas</h4>
+                <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                  @for (imagen_ of images_files; track imagen_.id) {
+                    <div class="relative">
+                      <img [src]="imagen_.imagen" alt="Imagen" class="w-full h-32 object-cover rounded-md" />
+                      <button type="button" (click)="removeImages(imagen_.id)"
+                        class="absolute top-0 right-0 mt-1 mr-1 bg-gray-200 text-gray-500 hover:bg-gray-300 rounded-full w-6 h-6 flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Actions -->
+    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+      <button type="submit" (click)="save()"
+        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#009974] hover:bg-[#007a5c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#009974]">
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>

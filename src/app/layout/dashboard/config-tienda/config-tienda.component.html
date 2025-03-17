@@ -1,0 +1,23 @@
+<div class="flex h-screen overflow-hidden">
+  <div class="hidden md:block">
+  <aside class="flex flex-col w-54 h-screen px-4 py-12 overflow-y-auto bg-gray-50 border-r border-gray-200 space-y-8">
+    <a routerLink="/dashboard/preferencias/informacion-general" routerLinkActive="bg-[#009974] text-white"
+    class="block px-4 py-2 text-md text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900">Información general</a>
+    <a routerLink="/dashboard/preferencias/ajustes-generales" routerLinkActive="bg-[#009974] text-white"
+     class="block px-4 py-2 text-md text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900">Logo banner y colores</a>
+    <a routerLink="/dashboard/preferencias/url-qr" routerLinkActive="bg-[#009974] text-white"
+     class="block px-4 py-2 text-md text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900">URL y código QR</a>
+  </aside>
+  </div>
+
+  <div class="w-full ">
+    <div class="flex justify-between items-center p-4 bg-gray-50 text-white shadow-md">
+      <h1 class="text-lg font-semibold text-[#009974]">Personaliza tu catálogo</h1>
+      <span class="text-lg font-medium text-[#009974]">{{name | titlecase}}</span>
+    </div>
+
+    <router-outlet ></router-outlet>
+  </div>
+
+</div>
+

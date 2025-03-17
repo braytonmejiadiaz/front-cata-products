@@ -1,0 +1,52 @@
+<div class="overflow-auto h-screen lg:p-5 flex flex-col items-center">
+  <section class="bg-white p-8 rounded-2xl shadow-2xl w-full mx-auto">
+    <!-- Encabezado -->
+    <div class="mb-10">
+      <h2 class="text-3xl font-bold text-gray-900">Comparte tu Negocio</h2>
+      <p class="text-sm text-gray-500">Comparte la URL de tu tienda o escanea el código QR.</p>
+    </div>
+
+    <!-- Sección de la URL del negocio -->
+    <div class="mb-10">
+      <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#009974]" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" />
+        </svg>
+        URL de tu Negocio
+      </h3>
+      <div class="flex flex-col md:flex-row items-center gap-4">
+        <input type="text" id="storeUrl" [(ngModel)]="storeUrl" readonly class="w-full p-3 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-700 focus:outline-none" />
+        <button class="bg-[#009974] px-10 w-full sm:w-1/6 py-3 rounded-lg text-white font-semibold hover:bg-[#007f5f]
+         transition-colors duration-200 flex items-center gap-2 cursor-pointer " (click)="copyUrl()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1zM6 3a3 3 0 013-3h2a3 3 0 013 3v2a3 3 0 01-3 3H9a3 3 0 01-3-3V3zM16 9a1 1 0 100 2h1a1 1 0 011 1v6a1 1 0 01-1 1H3a1 1 0 01-1-1v-6a1 1 0 011-1h1a1 1 0 100-2H3a3 3 0 00-3 3v6a3 3 0 003 3h14a3 3 0 003-3v-6a3 3 0 00-3-3h-1z" />
+          </svg>
+          Copiar URL
+        </button>
+      </div>
+    </div>
+
+    <!-- Sección del código QR -->
+    <div class="mb-10">
+      <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#009974]" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1V4zm2 2V5h1v1h-1z" clip-rule="evenodd" />
+          <path d="M13 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3zm2 2v-1h1v1h-1z" />
+        </svg>
+        Código QR
+      </h3>
+      <div class="flex flex-col items-center gap-6">
+        <div class="bg-gray-50 p-6 rounded-lg border-2 border-dashed border-gray-200">
+          <qrcode [qrdata]="qrData" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+        </div>
+        <button class="bg-[#009974] px-5 py-3 rounded-lg text-white font-semibold hover:bg-[#007f5f]
+         transition-colors duration-200 flex items-center gap-2 cursor-pointer" (click)="downloadQRCode()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+          </svg>
+          Descargar QR
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

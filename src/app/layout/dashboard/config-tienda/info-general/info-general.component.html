@@ -1,0 +1,88 @@
+<div class="lg:p-5 flex flex-col items-center h-screen">
+  <section class="bg-white p-8 rounded-2xl shadow w-full mx-auto h-[100%] overflow-auto">
+    <!-- Encabezado y botón de acción -->
+    <div class="flex flex-wrap justify-between items-center mb-10 gap-5">
+      <div>
+        <h2 class="text-3xl font-bold text-gray-900">Mi Perfil</h2>
+        <p class="text-sm text-gray-500">Administra la información de tu negocio</p>
+      </div>
+      <button class="bg-gradient-to-r from-[#009974] to-[#007f5f] px-5 py-2.5 rounded-lg text-white font-semibold hover:opacity-90 transition-opacity
+      duration-200 flex items-center gap-2 cursor-pointer" type="button" (click)="updateUser()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+        </svg>
+        Actualizar datos
+      </button>
+    </div>
+
+    <!-- Sección de información del negocio -->
+    <div class="mb-10">
+      <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#009974]" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+        </svg>
+        Información del Negocio
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-600" for="store_name">Nombre de tu negocio</label>
+          <input type="text" name="store_name" [(ngModel)]="store_name" placeholder="Nombre de tu negocio" class="border border-gray-200 p-3 rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-600" for="address">Dirección de tu negocio</label>
+          <input type="text" name="address" [(ngModel)]="address" placeholder="Dirección de tu negocio" class="border border-gray-200 p-3 rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-600" for="slug">Link de tu tienda</label>
+          <input type="text" name="slug" [(ngModel)]="storeUrl" placeholder="Mi tienda" class="border border-gray-200 p-3 rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="description" class="text-sm font-medium text-gray-600">Descripción de tu negocio</label>
+          <textarea rows="4" name="description" id="description" [(ngModel)]="description" class="border border-gray-200 p-3
+          rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]" placeholder="Describe tu negocio aquí..."></textarea>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="description" class="text-sm font-medium text-gray-600">Visión de tu negocio</label>
+          <textarea rows="4" name="vision" id="vision" [(ngModel)]="vision" class="border border-gray-200 p-3 rounded-lg text-sm
+          focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]" placeholder="Visión de tu negocio aquí..."></textarea>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="description" class="text-sm font-medium text-gray-600">Misión de tu negocio</label>
+          <textarea rows="4" name="mision" id="mision" [(ngModel)]="mision" class="border border-gray-200 p-3 rounded-lg text-sm
+          focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]" placeholder="Misión de tu negocio aquí..."></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sección de redes sociales -->
+    <div class="mb-10">
+      <h3 class="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#009974]" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+          <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+        </svg>
+        Redes Sociales
+      </h3>
+      <p class="text-sm text-gray-500 mb-6">Estos datos se usarán para optimizar tu tienda.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-600" for="Instagram">Instagram</label>
+          <input type="text" [(ngModel)]="ins" name="ins" placeholder="Instagram" class="border border-gray-200 p-3 rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-600" for="Facebook">Facebook</label>
+          <input type="text" [(ngModel)]="fb" name="fb" placeholder="Facebook" class="border border-gray-200 p-3 rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-600" for="tikTok">TikTok</label>
+          <input type="text" [(ngModel)]="tikTok" name="tikTok" placeholder="TikTok" class="border border-gray-200 p-3 rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-600" for="youtube">Youtube</label>
+          <input type="text" [(ngModel)]="youtube" name="youtube" placeholder="Youtube" class="border border-gray-200 p-3 rounded-lg text-sm focus:outline-none focus:border-[#009974] focus:ring-1 focus:ring-[#009974]">
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

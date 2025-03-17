@@ -1,0 +1,170 @@
+  <div class="bg-[#F3F3F2] h-[100%]">
+  <!-- Header -->
+  <app-header class="flex-shrink-0"></app-header>
+  <!-- Espacio para evitar que el contenido quede oculto detrás del header fijo -->
+  <div class="pt-35"></div>
+
+  <div class="rounded-lg p-6 w-2/3 mx-auto w-full sm:w-2/3">
+
+      <h1 class="text-2xl font-semibold text-gray-800 mb-6">Carrito de Compras</h1>
+
+      @if (cartItems.length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Columna 1: Datos del cliente y método de pago -->
+          <div class="space-y-6">
+            <!-- Sección 1: Datos del Usuario -->
+            <div class="shadow p-5 rounded-lg">
+              <h2 class="text-lg font-semibold text-gray-700 mb-4">Datos del Usuario</h2>
+              <form (ngSubmit)="finalizarCompra()" class="space-y-3">
+                <div>
+                  <label for="nombre" class="block text-sm font-medium text-gray-700 mb-1">Nombre: *</label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    [(ngModel)]="nombre"
+                    name="nombre"
+                    class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:border-[#009974]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="direccion" class="block text-sm font-medium text-gray-700 mb-1">Dirección de entrega: *</label>
+                  <input
+                    type="text"
+                    id="direccion"
+                    [(ngModel)]="direccion"
+                    name="direccion"
+                    class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:border-[#009974]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="ciudad" class="block text-sm font-medium text-gray-700 mb-1">Ciudad: *</label>
+                  <input
+                    type="text"
+                    id="ciudad"
+                    [(ngModel)]="ciudad"
+                    name="ciudad"
+                    class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:border-[#009974]"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="telefono" class="block text-sm font-medium text-gray-700 mb-1">Teléfono: *</label>
+                  <input
+                    type="text"
+                    id="telefono"
+                    [(ngModel)]="telefono"
+                    name="telefono"
+                    class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:border-[#009974]"
+                    required
+                  />
+                </div>
+              </form>
+            </div>
+
+            <!-- Sección 2: Método de Pago -->
+            <div class="shadow p-5 rounded-lg">
+              <h2 class="text-lg font-semibold text-gray-700 mb-4">Método de Pago</h2>
+              <div class="space-y-3">
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="metodoPago"
+                    [(ngModel)]="metodoPago"
+                    value="transferencia"
+                    class="mr-2"
+                    required
+                  />
+                  <span class="text-sm text-gray-700">Transferencia</span>
+                </label>
+                <label class="flex items-center">
+                  <input
+                    type="radio"
+                    name="metodoPago"
+                    [(ngModel)]="metodoPago"
+                    value="contraentrega"
+                    class="mr-2"
+                    required
+                  />
+                  <span class="text-sm text-gray-700">Contraentrega</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna 2: Información del pedido y comentarios -->
+          <div class="space-y-6">
+            <!-- Sección 1: Resumen del Pedido -->
+            <div class="shadow p-5 rounded-lg">
+              <h2 class="text-lg font-semibold text-gray-700 mb-4">Resumen del Pedido</h2>
+              <!-- Lista de productos -->
+              <div class="space-y-4">
+                @for (item of cartItems; track item.product.id) {
+                  <div class="flex items-center justify-between border-b pb-3">
+                    <div class="flex items-center space-x-3">
+                      <img
+                        [src]="item.product.imagen"
+                        alt="{{ item.product.title }}"
+                        class="w-12 h-12 object-cover rounded-md"
+                      />
+                      <div>
+                        <h2 class="text-base font-medium text-gray-800">{{ item.product.title }}</h2>
+                        <p class="text-sm text-gray-600">{{ item.product.price_cop | currency:'COP':'symbol-narrow':'1.0-0'  }} COP x {{ item.quantity }}</p>
+                      </div>
+                    </div>
+                    <button
+                      (click)="removeItem($index)"
+                      class="text-gray-500 hover:text-red-500 transition-colors"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <!-- Total del carrito -->
+              <div class="flex justify-end mt-4">
+                <p class="text-lg font-semibold text-gray-800">Total: {{ getTotal() | currency:'COP':'symbol-narrow':'1.0-0' }} COP</p>
+              </div>
+            </div>
+
+            <!-- Sección 2: Comentarios -->
+            <div class="shadow p-5 rounded-lg">
+              <h2 class="text-lg font-semibold text-gray-700 mb-4">Comentarios Adicionales</h2>
+              <textarea
+                [(ngModel)]="comentario"
+                name="comentario"
+                class="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:border-[#009974]"
+                rows="3"
+                placeholder="Escribe aquí cualquier comentario adicional..."
+              ></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción (debajo de las dos columnas) -->
+        <div class="flex justify-end space-x-3 mt-6">
+          <button
+            (click)="clearCart()"
+            class="px-5 py-2 text-sm font-medium text-white bg-red-400 rounded-md hover:bg-red-600 transition-colors"
+          >
+            Vaciar Carrito
+          </button>
+          <button
+            type="submit"
+            (click)="finalizarCompra()"
+            class="px-5 py-2 text-sm font-medium text-white bg-[#009974] rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Finalizar Compra
+          </button>
+        </div>
+      } @else {
+        <!-- Mensaje si el carrito está vacío -->
+        <p class="text-gray-600 text-center">Tu carrito está vacío.</p>
+      }
+      </div>
+      <app-footer class="flex-shrink-0"></app-footer>
+</div>
+
+
