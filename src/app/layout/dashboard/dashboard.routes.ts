@@ -12,6 +12,11 @@ const dashboardRoutes: Routes = [
     component: DashboardComponent,
     children: [
       {
+        path:'estadisticas',
+        loadComponent: () => import('../dashboard/estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent),
+
+      },
+      {
         path:'crear-producto',
         component:CreateProductComponent,
       },

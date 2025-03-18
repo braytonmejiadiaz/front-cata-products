@@ -16,7 +16,7 @@ import { CartService } from '../../layout/dashboard/plantilla-ecommerce/cart.ser
   styleUrl: './tienda-publica.component.scss'
 })
 export class TiendaPublicaComponent {
-  phone:string = "";
+  phone: string = "";
   products: any[] = [];
   filteredProducts: any[] = [];
   slug: string | null = null;
@@ -41,21 +41,23 @@ export class TiendaPublicaComponent {
     private route: ActivatedRoute,
     private router: Router,
     public cartService: CartService,
-
   ) {}
-// Método para verificar si un producto está en el carrito
-isProductInCart(product: any): boolean {
-  const cartItems = this.cartService.getCartItems();
-  return cartItems.some(item => item.product.id === product.id);
-}
+
+  // Método para verificar si un producto está en el carrito
+  isProductInCart(product: any): boolean {
+    const cartItems = this.cartService.getCartItems();
+    return cartItems.some(item => item.product.id === product.id);
+  }
 
   closeAvatarPopup() {
     this.showAvatarPopup = false;
     this.updatePopupCache(); // Actualizar caché al cerrar manualmente
   }
+
   private updatePopupCache() {
     localStorage.setItem('popupTimestamp', new Date().getTime().toString());
   }
+
   checkPopupCache() {
     const lastShown = localStorage.getItem('popupTimestamp');
     const now = Date.now();
@@ -72,10 +74,9 @@ isProductInCart(product: any): boolean {
       this.slug = params['slug'];
       if (this.slug) {
         this.loadTiendaUsuario(this.slug);
-        this.loadCategoriesByUserSlug(this.slug);
         this.loadSlidersByUserSlug(this.slug);
       } else {
-        this.toast.error('Error al cargar la tienda')
+        this.toast.error('Error al cargar la tienda');
       }
     });
 
@@ -89,7 +90,6 @@ isProductInCart(product: any): boolean {
     });
     this.checkPopupCache();
   }
-
 
   obtenerDatosUsuario(slug: string) {
     this.publicService.getDataUsuario(slug).subscribe(
@@ -107,6 +107,7 @@ isProductInCart(product: any): boolean {
         if (resp && resp.productos && resp.productos.data) {
           this.products = resp.productos.data; // Accede a resp.productos.data
           this.filteredProducts = this.products; // Inicializa filteredProducts
+          this.loadCategoriesByUserSlug(slug); // Cargar categorías después de obtener los productos
         } else {
           this.products = [];
           this.filteredProducts = [];
@@ -122,10 +123,13 @@ isProductInCart(product: any): boolean {
   loadCategoriesByUserSlug(slug: string) {
     this.publicService.getCategoriesByUserSlug(slug).subscribe(
       (resp: any) => {
-        this.categories_first = resp;
+        // Filtrar categorías que tienen productos
+        this.categories_first = resp.filter((category: any) => {
+          return this.products.some((product) => product.categorie_first_id === category.id);
+        });
       },
       (err: any) => {
-       this.toast.error('Error al cargar las categorías', err.error.message);
+        this.toast.error('Error al cargar las categorías', err.error.message);
       }
     );
   }
@@ -173,6 +177,7 @@ isProductInCart(product: any): boolean {
     const slug = this.route.snapshot.paramMap.get('slug');
     this.router.navigate(['/tienda', slug, 'producto', productId]);
   }
+
   goToHome() {
     const slug = this.route.snapshot.paramMap.get('slug');
     this.router.navigate(['/tienda', slug]);
@@ -180,19 +185,18 @@ isProductInCart(product: any): boolean {
 
   navigateCart() {
     const slug = this.route.snapshot.paramMap.get('slug');
-    this.router.navigate(['/tienda',slug,'carrito']);
+    this.router.navigate(['/tienda', slug, 'carrito']);
   }
+
   getProductUrl(product: any): string {
     return `${window.location.origin}/tienda/${this.slug}/producto/${product.id}`;
   }
-
 
   addToCart(product: any) {
     this.cartService.addToCart(product, 1);
     this.showCartPopup = true;
     this.toast.success('Producto añadido al carrito', '¡Éxito!');
   }
-
 
   closeCartPopup() {
     this.showCartPopup = false;
@@ -214,6 +218,4 @@ isProductInCart(product: any): boolean {
       return acc + (item.product.price_cop * item.quantity);
     }, 0);
   }
-
 }
-

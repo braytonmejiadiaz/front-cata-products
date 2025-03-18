@@ -1,5 +1,5 @@
-<div class="bg-[#F0F2F4] min-h-screen lg:p-8">
-  <div class="bg-white rounded-lg shadow overflow-hidden w-full">
+<div class="h-screen bg-gray-100 lg:p-8 w-full overflow-auto">
+  <div class="bg-white rounded-lg shadow h-[100%] overflow-auto">
     <!-- Header -->
     <div class="px-4 py-5 sm:p-6 border-b border-gray-200">
       <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -107,7 +107,8 @@
                 Estado
               </label>
               <select id="state" name="state" [(ngModel)]="state"
-                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[#009974] focus:border-[#009974] sm:text-sm rounded-md bg-white">
+                class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[#009974]
+                focus:border-[#009974] sm:text-sm rounded-md bg-white">
                 <option value="1">Pendiente</option>
                 <option value="2">Público</option>
               </select>
@@ -138,73 +139,127 @@
           </div>
 
           <!-- Right Column -->
-          <div class="space-y-4">
-            <!-- Media -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700">
-                Media
-              </label>
 
-              <!-- Main Image Upload -->
-              <div class="mt-2">
-                <label for="main-image-upload"
-                  class="relative cursor-pointer bg-white border border-gray-300 rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#009974] focus:border-[#009974] block w-full text-center">
-                  Subir imagen principal
-                  <input id="main-image-upload" name="main-image-upload" type="file" class="sr-only"
-                    (change)="processFile($event)" />
-                </label>
-              </div>
-
-              <!-- Main Image Preview -->
-              @if (imagen_previsualiza) {
-                <div class="mt-2">
-                  <img [src]="imagen_previsualiza" alt="Vista previa"
-                    class="w-full h-48 object-cover rounded-md border border-gray-200" />
-                </div>
-              }
-
-              <!-- Additional Images Upload -->
-              <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-700">Imágenes Adicionales</label>
-                <div class="mt-2">
-                  <label for="additional-images-upload"
-                    class="relative cursor-pointer bg-white border border-gray-300 rounded-md py-2 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#009974] focus:border-[#009974] block w-full text-center">
-                    Subir imágenes adicionales
-                    <input id="additional-images-upload" name="additional-images-upload" type="file" multiple
-                      class="sr-only" (change)="processFileTwo($event)" />
+          <div class="space-y-6">
+            <!-- Primera fila: Subir imagen principal -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Sección para subir imagen principal -->
+              <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sube tu imagen principal: (*)</label>
+                <div class="relative">
+                  <input
+                    type="file"
+                    class="opacity-0 absolute w-full h-full cursor-pointer"
+                    id="customFile"
+                    accept=".jpeg, .bmp, .jpg, .png, .gif, .webp"
+                    (change)="processFile($event)"
+                  />
+                  <label
+                    for="customFile"
+                    class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+                  >
+                    Seleccionar archivo
                   </label>
                 </div>
+                <!-- Previsualización de la imagen principal -->
+                <div class="mt-4">
+                  <img
+                    class="max-w-full h-48 object-contain rounded-lg shadow-sm"
+                    [src]="imagen_previsualiza"
+                    alt="Previsualización de la imagen principal"
+                  />
+                </div>
               </div>
 
-              <!-- Image List -->
-              <div class="mt-4">
-                <h4 class="text-sm font-medium text-gray-700">Imágenes Subidas</h4>
-                <div class="mt-2 grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  @for (imagen_ of images_files; track imagen_.id) {
+              <!-- Sección para subir imágenes adicionales -->
+              <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Sube tus imágenes adicionales: (*)</label>
+                <div class="flex flex-col md:flex-row gap-4">
+                  <!-- Input para subir archivos -->
+                  <div class="w-full">
                     <div class="relative">
-                      <img [src]="imagen_.imagen" alt="Imagen" class="w-full h-32 object-cover rounded-md" />
-                      <button type="button" (click)="removeImages(imagen_.id)"
-                        class="absolute top-0 right-0 mt-1 mr-1 bg-gray-200 text-gray-500 hover:bg-gray-300 rounded-full w-6 h-6 flex items-center justify-center">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                      </button>
+                      <input
+                        type="file"
+                        class="opacity-0 absolute w-full h-full cursor-pointer"
+                        id="customFileOImagenes"
+                        accept=".jpeg, .bmp, .jpg, .png, .gif, .webp"
+                        (change)="processFileTwo($event)"
+                      />
+                      <label
+                        for="customFileOImagenes"
+                        class="block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
+                      >
+                        Seleccionar archivo
+                      </label>
                     </div>
-                  }
+                    <!-- Previsualización de la imagen adicional -->
+                    <div class="mt-4">
+                      <img
+                        class="max-w-full h-48 object-contain rounded-lg shadow-sm"
+                        [src]="imagen_add_previsualiza"
+                        alt="Previsualización de la imagen adicional"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Botón para agregar imagen -->
+                  <div class="w-full md:w-auto flex items-end">
+                    <button
+                      class="w-full md:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      (click)="addImagen()"
+                    >
+                      + Agregar Imagen
+                    </button>
+                  </div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Segunda fila: Tabla de imágenes subidas -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+              <h3 class="text-lg font-medium text-gray-700 mb-4">Imágenes subidas</h3>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IMAGEN</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ACCIÓN</th>
+                    </tr>
+                  </thead>
+                  <tbody class="bg-white divide-y divide-gray-200">
+                    <tr *ngFor="let imagen_ of images_files; let i = index">
+                      <!-- Imagen -->
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <img
+                          class="w-16 h-16 object-cover rounded-lg"
+                          [src]="imagen_.imagen"
+                          alt="Imagen subida"
+                        />
+                      </td>
+                      <!-- Acciones -->
+                      <td class="px-6 py-4 whitespace-nowrap">
+                        <button
+                          class="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+                          (click)="removeImages(imagen_.id)"
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-      }
-    </div>
+    }
+  </div>
 
     <!-- Actions -->
     <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
       <button type="submit" (click)="save()"
-        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#009974] hover:bg-[#007a5c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#009974]">
+        class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium
+        rounded-md text-white bg-[#009974] hover:bg-[#007a5c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#009974]">
         Guardar
       </button>
     </div>

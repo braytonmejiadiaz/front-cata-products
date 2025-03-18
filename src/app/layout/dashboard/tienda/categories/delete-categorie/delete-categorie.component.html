@@ -1,43 +1,32 @@
-<!--begin::Modal content-->
-<div class="modal-content">
-    <!--begin::Modal header-->
-    <div class="modal-header" id="kt_modal_add_user_header">
-        <!--begin::Modal title-->
-        <h2 class="fw-bolder">Delete Categorie: #{{ categorie.id }}</h2>
-        
-        <!--end::Modal title-->
-        <!--begin::Close-->
-        <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close" (click)="modal.dismiss()">
-            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
-            <span class="svg-icon svg-icon-1">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
-                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
-                </svg>
-            </span>
-            <!--end::Svg Icon-->
-        </div>
-        <!--end::Close-->
-    </div>
-    <!--end::Modal header-->
-    <!--begin::Modal body-->
-    <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
-        <!--begin::Form-->
-        <form id="kt_modal_add_user_form" class="form" action="#">
-            <p>
-                ¿ESTAS SEGURO DE ELIMINAR ESTA CATEGORIA?
-            </p>
-            <div class="text-center pt-15">
-                <button type="reset" class="btn btn-light me-3" (click)="modal.dismiss()">Cerrar</button>
-                <button type="button" (click)="delete()" class="btn btn-danger" data-kt-users-modal-action="submit">
-                    <span class="indicator-label">ELIMINAR</span>
+<!-- Modal Content -->
+<div class="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+      <!-- Modal Header -->
+      <div class="flex justify-between items-center p-6 border-b">
+          <h2 class="text-xl font-bold text-gray-800">Delete Categorie: #{{ categorie.id }}</h2>
+          <button class="p-2 hover:bg-gray-100 rounded-full" (click)="modal.dismiss()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+          </button>
+      </div>
 
-                    <span class="spinner-border spinner-border-sm align-middle ms-2" *ngIf="isLoading | async"></span>
-                </button>
-            </div>
-        </form>
-        <!--end::Form-->
-    </div>
-    <!--end::Modal body-->
+      <!-- Modal Body -->
+      <div class="p-6">
+          <form id="kt_modal_add_user_form" class="space-y-6">
+              <p class="text-gray-700 text-center">
+                  ¿ESTAS SEGURO DE ELIMINAR ESTA CATEGORIA?
+              </p>
+              <div class="flex justify-center space-x-4 pt-6">
+                  <button type="button" (click)="modal.dismiss()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-200">
+                      Cerrar
+                  </button>
+                  <button type="button" (click)="delete()" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-200">
+                      ELIMINAR
+                  </button>
+              </div>
+          </form>
+      </div>
+  </div>
 </div>
-<!--end::Modal content-->

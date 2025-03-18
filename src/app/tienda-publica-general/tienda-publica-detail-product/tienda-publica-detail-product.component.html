@@ -1,6 +1,24 @@
 <div class="min-h-screen flex flex-col bg-[#F3F3F2]">
   <app-header class="flex-shrink-0"></app-header>
   <div class="pt-35"></div>
+
+  <div *ngIf="showImagePopup"
+    class="fixed inset-0 z-50 bg-black/50 bg-opacity-75 flex items-center justify-center p-4"
+    (click)="closeImagePopup()">
+    <div class="relative max-w-4xl md:max-w-3xl lg:max-w-4xl w-full max-h-[75vh] flex items-center justify-center mx-4 md:mx-8 lg:mx-0">
+      <div class="relative">
+        <img [src]="selectedImage || product.imagen"
+          alt="{{ product.title }}"
+          class="max-w-full max-h-170 object-contain mx-auto rounded-lg"
+          (click)="$event.stopPropagation()">
+        <button class="absolute top-0 right-0 text-white text-2xl hover:text-gray-300 py-1 px-3 bg-gray-600 rounded-full"
+          (click)="closeImagePopup()">
+          &times;
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Contenido principal -->
   <main class="flex-grow">
     @if (isLoading) {
@@ -10,24 +28,58 @@
       </div>
     } @else if (product) {
       <!-- Detalles del producto -->
-      <div class="w-3/4 mx-auto w-full sm:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-white">
-        <!-- Imagen del producto -->
-        <div class="flex items-center justify-center">
+      <div class="w-3/4 mx-auto w-full sm:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 mb-16 bg-white rounded-lg">
+        <!-- Imagen del producto y miniaturas -->
+        <div class="flex flex-col items-center">
+          <!-- Imagen principal -->
           <img
-            [src]="product.imagen"
+            [src]="selectedImage || product.imagen"
             alt="{{ product.title }}"
-            class="w-full h-auto max-h-96 object-cover rounded-lg shadow-md"
+            class="w-full h-auto max-h-96 object-cover rounded-lg shadow-md cursor-pointer"
+            (click)="openImagePopup()"
           />
+
+          <!-- Miniaturas de imágenes adicionales -->
+          <div class="flex gap-4 mt-4 overflow-x-auto">
+            @for (imagen of product.images; track $index) {
+              <img
+                [src]="imagen.imagen"
+                alt="Imagen adicional {{ $index + 1 }}"
+                class="w-20 h-20 object-cover rounded-lg shadow-md cursor-pointer"
+                (click)="selectImage(imagen.imagen)"
+                [ngClass]="{'border-2 border-blue-500': selectedImage === imagen.imagen}"
+              />
+            }
+          </div>
         </div>
 
         <!-- Información del producto -->
         <div class="space-y-6">
           <h1 class="text-3xl font-bold text-gray-900">{{ product.title }}</h1>
           <div class="space-y-2">
-            <p class="text-gray-700 text-xl font-semibold">{{ product.price_cop | currency:'COP':'symbol-narrow':'1.0-0'  }} COP</p>
+            <p class="text-gray-700 text-xl font-semibold">{{ product.price_cop | currency:'COP':'symbol-narrow':'1.0-0' }} COP</p>
           </div>
 
           <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+
+          <!-- Selector de variaciones -->
+          @if (product.variations && product.variations.length > 0) {
+            <div class="space-y-2">
+              <label for="variation" class="block text-gray-700 font-semibold mb-2">Variación:</label>
+              <select
+                id="variation"
+                [(ngModel)]="selectedVariation"
+                class="w-full p-2 border border-gray-300 rounded-lg"
+              >
+                @for (variation of product.variations; track $index) {
+                  <option [ngValue]="variation">
+                    {{ variation.propertie.name }} - {{ variation.add_price | currency:'COP':'symbol-narrow':'1.0-0' }}
+                  </option>
+                }
+              </select>
+            </div>
+          }
+
           <!-- Selector de cantidad -->
           <label for="quantity" class="block text-gray-700 font-semibold mb-2">Cantidad:</label>
           <div class="flex flex-wrap gap-8">
@@ -56,7 +108,7 @@
             <button
               (click)="addToCart(product, quantity)"
               class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg transition-colors cursor-pointer shadow-md"
-              [ngStyle]="{'background-color':usuario.button_color}"
+              [ngStyle]="{'background-color': usuario.button_color}"
             >
               Añadir al carrito ({{ quantity }})
             </button>
@@ -78,6 +130,13 @@
             <span class="font-bold">Marca:</span>
             {{ product.brand.name }}
           </p>
+
+          <span class="font-bold text-gray-600">Etiquetas:</span>
+          @for (tag of product.tags; track $index) {
+            <span class="text-gray-600">
+              {{ tag.item_text }}
+            </span>
+          }
         </div>
       </div>
     } @else {
@@ -86,6 +145,4 @@
         <p class="text-gray-600 text-xl">No se encontraron detalles del producto.</p>
       </div>
     }
-  </main>
-  <app-footer class="flex-shrink-0"></app-footer>
-</div>
+    <app-footer class="flex-shrink-0"></app-footer>

@@ -72,7 +72,6 @@ export class Tiendaservice {
     );
   }
 
-
   /**
    * Obtiene los productos por el slug de un usuario.
    * @param slug El slug del usuario.

@@ -24,13 +24,14 @@
     [class.transform]="!isSidebarOpen"
     [class.-translate-x-full]="!isSidebarOpen"
     [class.lg:translate-x-0]="true"
-    class="fixed inset-y-0 z-40 flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-gray-50 border-r border-gray-200 transition-transform duration-200 ease-in-out lg:static lg:transform-none"
+    class="fixed inset-y-0 z-40 flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto bg-gray-50 border-r border-gray-200
+    transition-transform duration-200 ease-in-out lg:static lg:transform-none"
   >
     <!-- Logo -->
     <a  class="flex items-center justify-center">
       <img
-        class="w-auto h-8"
-        src="https://merakiui.com/images/logo.svg"
+        class="w-auto h-15"
+        src="/TREGGIO-2.png"
         alt="logo"
       />
     </a>
@@ -39,6 +40,30 @@
 
     <!-- Menú de navegación -->
     <nav class="flex-1 mt-6 space-y-4">
+      <div>
+        <a
+          routerLink="/dashboard/estadisticas"
+          routerLinkActive="bg-[#009974] text-white"
+          class="flex items-center px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
+          (click)="onLinkClick()"
+        >
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m1-10V9a1 1 0 00-1-1h-3m-6 0a1 1 0 011-1h11a1 1 0 011 1v2.284m-1.592 4.291A3 3 0 0112 19.584m-3.418-.592a3 3 0 01-2.174-2.457m2.457.592a3 3 0 012.174 2.457m.318-.592a3 3 0 012.495-2.174m-.318.592a3 3 0 01-2.495 2.174"
+            />
+          </svg>
+          <span class="ml-3">Estadisticas</span>
+        </a>
+      </div>
+
       <!-- Mi Tienda -->
       <div>
         <a
@@ -476,7 +501,6 @@
       </div>
     </a>
   </aside>
-
   <!-- Contenido principal -->
   <div class="flex-1 w-full overflow-x-hidden">
     <router-outlet></router-outlet>

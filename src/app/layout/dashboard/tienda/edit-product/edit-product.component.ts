@@ -51,6 +51,7 @@ export class EditProductComponent {
     private toastr: ToastrService,
     private activedRoute: ActivatedRoute,
     public modalService: NgbModal,
+    public productImagenService: ProductService,
   ) {
 
   }
@@ -128,6 +129,7 @@ export class EditProductComponent {
     reader.onloadend = () => this.imagen_previsualiza = reader.result;
     this.isLoadingView();
   }
+
   processFileTwo($event:any){
     if($event.target.files[0].type.indexOf("image") < 0){
       this.toastr.error("Validacion","El archivo no es una imagen");
@@ -139,6 +141,7 @@ export class EditProductComponent {
     reader.onloadend = () => this.imagen_add_previsualiza = reader.result;
     this.isLoadingView();
   }
+
 
   isLoadingView(){
     this.productService.isLoadingSubject.next(true);
@@ -218,14 +221,22 @@ export class EditProductComponent {
 
     })
   }
-  removeImages(id:number){
-    const modalRef = this.modalService.open(DeleteImagenAddComponent,{centered:true, size: 'md'});
-    modalRef.componentInstance.id = id;
-    modalRef.componentInstance.ImagenD.subscribe((resp:any) => {
-      let INDEX = this.images_files.findIndex((item:any) => item.id == id);
-      if(INDEX != -1){
-        this.images_files.splice(INDEX,1);
+
+  removeImages(id: number) {
+
+    // Convertir el id a string (si es necesario)
+    const imagen_id = id.toString();
+
+    // Llamar a la función deleteImageProduct para eliminar la imagen del servidor
+    this.productImagenService.deleteImageProduct(imagen_id).subscribe(
+      (response) => {
+        this.images_files = this.images_files.filter((imagen:any) => imagen.id !== id);
+        this.toastr.success('Imagen eliminada')
+      },
+      (error) => {
+        this.toastr.error('Error al eliminar la imagen');
       }
-    })
+    );
   }
+
 }

@@ -16,12 +16,15 @@ import { CommonModule } from '@angular/common';
 })
 export class TiendaPublicaDetailProductComponent {
 
-  phone:string = "";
+  phone: string = "";
   productId: string | null = null;
   product: any = null;
   isLoading: boolean = true;
   quantity: number = 1;
   usuario: any = {};
+  showImagePopup: boolean = false;
+  selectedImage: string | null = null;
+  selectedVariation: any = null; // Nueva propiedad para la variación seleccionada
 
   constructor(
     private route: ActivatedRoute,
@@ -30,6 +33,18 @@ export class TiendaPublicaDetailProductComponent {
     private cartService: CartService,
     private routing: Router,
   ) {}
+
+  selectImage(imageUrl: string) {
+    this.selectedImage = imageUrl;
+  }
+
+  openImagePopup() {
+    this.showImagePopup = true;
+  }
+
+  closeImagePopup() {
+    this.showImagePopup = false;
+  }
 
   ngOnInit(): void {
     this.productId = this.route.snapshot.paramMap.get('id');
@@ -59,13 +74,32 @@ export class TiendaPublicaDetailProductComponent {
     this.isLoading = true;
     this.tiendaService.getProductById(productId).subscribe({
       next: (response: any) => {
+        console.log('Respuesta del backend:', response); // Verifica la respuesta
         this.product = response.product;
+        this.product.tags = JSON.parse(this.product.tags);
         this.isLoading = false;
+
+        // Verifica si el producto tiene imágenes adicionales
+        if (!this.product.images) {
+          this.product.images = []; // Inicializa como un array vacío si no hay imágenes
+        }
+
+        // Agrega la imagen principal como la primera miniatura
+        this.product.images.unshift({
+          id: 0, // Usamos un ID ficticio para la imagen principal
+          imagen: this.product.imagen,
+        });
+
+        // Si el producto tiene variaciones, selecciona la primera por defecto
+        if (this.product.variations && this.product.variations.length > 0) {
+          this.selectedVariation = this.product.variations[0];
+        }
       },
       error: (error: any) => {
+        console.error('Error al cargar el producto:', error);
         this.isLoading = false;
         this.toastr.error('Error al cargar el producto', error.error.message || 'Error desconocido');
-      }
+      },
     });
   }
 
@@ -81,34 +115,73 @@ export class TiendaPublicaDetailProductComponent {
     }
   }
 
-  // Añadir al carrito
-  addToCart(product: any, quantity: number) {
-    const slug = this.route.snapshot.paramMap.get('slug');
-    this.cartService.addToCart(product, quantity);
-    this.toastr.success('Producto añadido al carrito', '¡Éxito!');
-    this.routing.navigate(['/tienda',slug,'carrito']);
-  }
-
   navigateCart() {
     const slug = this.route.snapshot.paramMap.get('slug');
-    this.routing.navigate(['/tienda',slug,'carrito']);
+    this.routing.navigate(['/tienda', slug, 'carrito']);
   }
 
-  // Comprar por WhatsApp
-  buyOnWhatsApp(product: any, quantity: number) {
-    if (!this.usuario.phone) {
-      this.toastr.error('No se encontró el número de teléfono del usuario.');
-      return;
-    }
-
-    const message = `Hola, quiero comprar ${quantity} unidad(es) de ${product.title} (${product.price_cop} COP).`;
-    const url = `https://wa.me/${this.usuario.phone}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
-  }
 
   goToHome() {
     const slug = this.route.snapshot.paramMap.get('slug');
     this.routing.navigate(['/tienda', slug]);
   }
 
+
+
+  // Añadir al carrito
+addToCart(product: any, quantity: number) {
+  const slug = this.route.snapshot.paramMap.get('slug');
+
+  // Si el producto tiene variaciones, asegúrate de que se haya seleccionado una
+  if (product.variations && product.variations.length > 0 && !this.selectedVariation) {
+    this.toastr.error('Por favor, selecciona una variación antes de añadir al carrito.');
+    return;
+  }
+
+  // Calcular el precio total (usar solo el precio de la variación si existe)
+  const price = this.selectedVariation
+    ? this.selectedVariation.add_price // Usar solo el precio de la variación
+    : product.price_cop; // Usar el precio base si no hay variación
+
+  // Crear el objeto del producto para el carrito
+  const productToAdd = {
+    ...product,
+    price_cop: price, // Precio total
+    selectedVariation: this.selectedVariation, // Incluir la variación seleccionada
+  };
+
+  // Añadir el producto al carrito
+  this.cartService.addToCart(productToAdd, quantity);
+  this.toastr.success('Producto añadido al carrito', '¡Éxito!');
+  this.routing.navigate(['/tienda', slug, 'carrito']);
+}
+
+// Comprar por WhatsApp
+buyOnWhatsApp(product: any, quantity: number) {
+  if (!this.usuario.phone) {
+    this.toastr.error('No se encontró el número de teléfono del usuario.');
+    return;
+  }
+
+  // Calcular el precio total (usar solo el precio de la variación si existe)
+  const price = this.selectedVariation
+    ? this.selectedVariation.add_price // Usar solo el precio de la variación
+    : product.price_cop; // Usar el precio base si no hay variación
+
+  // Formatear el precio manualmente
+  const formattedPrice = price.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+  });
+
+  // Crear el mensaje con el nombre de la variación si existe
+  const variationText = this.selectedVariation
+    ? ` (Variación: ${this.selectedVariation.propertie.name})`
+    : '';
+
+  const message = `Hola, quiero comprar ${quantity} unidad(es) de ${product.title}${variationText} (${formattedPrice}).`;
+  const url = `https://wa.me/${this.usuario.phone}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
 }

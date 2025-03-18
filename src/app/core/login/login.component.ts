@@ -39,7 +39,7 @@ export class LoginComponent {
         if (resp === true) {
           this.toastr.success("Éxito", 'Bienvenido a la tienda');
           setTimeout(() => {
-            this.router.navigateByUrl("/dashboard");
+            this.router.navigateByUrl("/dashboard/estadisticas");
           }, 500);
         } else {
           this.toastr.error("Error", 'Credenciales incorrectas');
