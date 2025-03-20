@@ -1,4 +1,4 @@
-import { Component, } from '@angular/core';
+import { Component } from '@angular/core';
 import { CartService } from '../../layout/dashboard/plantilla-ecommerce/cart.service';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,13 +20,13 @@ export class TiendaPublicaCarritoComponent {
   direccion: string = '';
   telefono: string = '';
   metodoPago: string = '';
-  ciudad:string = '';
+  ciudad: string = '';
   comentario: string = '';
   usuario: any = {};
 
   constructor(private cartService: CartService, private router: Router,
-    private route: ActivatedRoute ,
-    private tienda:Tiendaservice, private toast: ToastrService) {
+    private route: ActivatedRoute,
+    private tienda: Tiendaservice, private toast: ToastrService) {
     this.cartItems = this.cartService.getCartItems();
   }
 
@@ -52,6 +52,7 @@ export class TiendaPublicaCarritoComponent {
     this.cartService.clearCart();
     this.cartItems = [];
   }
+
   obtenerDatosUsuario(slug: string) {
     this.tienda.getDataUsuario(slug).subscribe(
       (data: any) => {
@@ -62,16 +63,15 @@ export class TiendaPublicaCarritoComponent {
       }
     );
   }
-
   finalizarCompra() {
     if (!this.nombre || !this.direccion || !this.telefono || !this.metodoPago || !this.ciudad) {
       this.toast.error('Por favor, completa todos los campos requeridos antes de finalizar la compra.');
       return;
     }
 
-    // Crear el mensaje con los detalles del pedido
+    // Construir el mensaje con emojis en formato Unicode
     let mensaje = `🛒 *Detalles del Pedido* 🛒\n\n`;
-    mensaje += `👤 *Nombre:* ${this.nombre}\n`;
+    mensaje += `👦🏻 *Nombre:* ${this.nombre}\n`;
     mensaje += `🏠 *Dirección de entrega:* ${this.direccion}\n`;
     mensaje += `🏠 *Ciudad:* ${this.ciudad}\n`;
     mensaje += `📞 *Teléfono:* ${this.telefono}\n`;
@@ -86,21 +86,22 @@ export class TiendaPublicaCarritoComponent {
     mensaje += `📝 *Comentarios adicionales:*\n${this.comentario || "Ninguno"}\n\n`;
     mensaje += `¡Gracias por tu compra! 🎉`;
 
-    // Codificar el mensaje para la URL de WhatsApp
+    // Codificar el mensaje para la URL
     const encodedMessage = encodeURIComponent(mensaje);
 
-    // Abrir WhatsApp en una nueva pestaña
+    // Crear la URL de WhatsApp
     const url = `https://wa.me/${this.usuario.phone}?text=${encodedMessage}`;
 
+    // Abrir la URL en una nueva pestaña
     window.open(url, '_blank');
 
-    // Limpiar el carrito después de finalizar la compra
+    // Limpiar el carrito
     this.clearCart();
   }
 
   navigateCart() {
     const slug = this.route.snapshot.paramMap.get('slug');
-    this.router.navigate(['/tienda',slug,'carrito']);
+    this.router.navigate(['/tienda', slug, 'carrito']);
   }
 
   goToHome() {

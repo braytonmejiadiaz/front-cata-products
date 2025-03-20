@@ -9,6 +9,7 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 import { QRCodeModule, QRCodeComponent } from 'angularx-qrcode';
 
 
+
 export const appConfig: ApplicationConfig = {
 
   providers: [  provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),

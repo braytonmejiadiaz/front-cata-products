@@ -11,7 +11,7 @@ import { CartService } from '../../layout/dashboard/plantilla-ecommerce/cart.ser
 
 @Component({
   selector: 'app-tienda-publica',
-  imports: [CommonModule, FormsModule, FooterComponent, HeaderComponent,],
+  imports: [CommonModule, FormsModule, FooterComponent, HeaderComponent, ],
   templateUrl: './tienda-publica.component.html',
   styleUrl: './tienda-publica.component.scss'
 })
@@ -34,6 +34,8 @@ export class TiendaPublicaComponent {
   showCartPopup: boolean = false;
   selectedProduct: any = null;
   quantity: number = 1;
+  public currentIndex = 0;
+  public intervalId: any;
 
   constructor(
     private publicService: Tiendaservice,
@@ -70,6 +72,7 @@ export class TiendaPublicaComponent {
   }
 
   ngOnInit(): void {
+    this.startAutoSlide();
     this.route.params.subscribe((params) => {
       this.slug = params['slug'];
       if (this.slug) {
@@ -218,4 +221,38 @@ export class TiendaPublicaComponent {
       return acc + (item.product.price_cop * item.quantity);
     }, 0);
   }
+
+
+
+  // slider
+
+
+  ngOnDestroy(): void {
+    this.stopAutoSlide(); // Detener el carrusel al destruir el componente
+  }
+
+  // Cambiar al siguiente slide
+  public nextSlide(): void {
+    this.currentIndex = (this.currentIndex + 1) % this.sliders.length;
+  }
+
+  // Cambiar al slide anterior
+  public prevSlide(): void {
+    this.currentIndex = (this.currentIndex - 1 + this.sliders.length) % this.sliders.length;
+  }
+
+  // Iniciar el cambio automático
+  public startAutoSlide(): void {
+    this.intervalId = setInterval(() => {
+      this.nextSlide();
+    }, 5000); // Cambiar cada 5 segundos
+  }
+
+  // Detener el cambio automático
+  public stopAutoSlide(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+  }
+
 }

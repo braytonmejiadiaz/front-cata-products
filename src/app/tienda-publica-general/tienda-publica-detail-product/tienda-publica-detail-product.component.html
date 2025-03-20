@@ -66,17 +66,24 @@
           @if (product.variations && product.variations.length > 0) {
             <div class="space-y-2">
               <label for="variation" class="block text-gray-700 font-semibold mb-2">Variación:</label>
-              <select
-                id="variation"
-                [(ngModel)]="selectedVariation"
-                class="w-full p-2 border border-gray-300 rounded-lg"
-              >
-                @for (variation of product.variations; track $index) {
-                  <option [ngValue]="variation">
-                    {{ variation.propertie.name }} - {{ variation.add_price | currency:'COP':'symbol-narrow':'1.0-0' }}
-                  </option>
-                }
-              </select>
+              <div class="relative">
+                <select
+                  id="variation"
+                  [(ngModel)]="selectedVariation"
+                  class="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                >
+                  @for (variation of product.variations; track $index) {
+                    <option [ngValue]="variation">
+                      {{ variation.propertie.name }} - {{ variation.add_price | currency:'COP':'symbol-narrow':'1.0-0' }}
+                    </option>
+                  }
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
             </div>
           }
 

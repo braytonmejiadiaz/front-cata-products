@@ -27,7 +27,7 @@ export class CodigoqrEnlaceComponent {
       this.slug = resp.slug;
       this.popup_preview = resp.popup;
       this.storeUrl = `http://localhost:4200/tienda/${this.slug}`;
-      this.qrData = this.storeUrl; // Asigna la URL al qrData
+      this.qrData = this.storeUrl;
     });
   }
 
@@ -42,7 +42,7 @@ export class CodigoqrEnlaceComponent {
     input.select();
     document.execCommand('copy');
     document.body.removeChild(input);
-    alert("URL copiada al portapapeles: " + this.storeUrl);
+    this.toast.success("URL copiada al portapapeles: " + this.storeUrl)
   }
 
   popup_preview: any = "https://tucartaya.com/wp-content/uploads/2024/12/upload-media.png";

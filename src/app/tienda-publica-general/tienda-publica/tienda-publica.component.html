@@ -4,15 +4,35 @@
   <app-header></app-header>
 
   <!-- Sección de Banners -->
-  <div class="container mx-auto px-6 py-4">
-    <div class="grid grid-cols-1 h-full gap-6">
-      @for (slider of sliders; track slider.id) {
-        <div class="bg-white shadow-md rounded-lg overflow-hidden">
-          <img [src]="slider.imagen" alt="{{ slider.title }}" class="w-full object-cover" />
+  <div class="container mx-auto px-2 sm:px-4 md:px-6 py-2 relative">
+    <!-- Contenedor del Carrusel -->
+    <div class="relative w-full h-[20vh] sm:h-[50vh] md:h-[60vh] overflow-hidden rounded  rounded-3xl">
+      @for (slider of sliders; track slider.id; let i = $index) {
+        <div
+          class="absolute inset-0 w-full h-full transition-opacity duration-500 ease-in-out"
+          [ngClass]="{ 'opacity-100': currentIndex === i, 'opacity-0': currentIndex !== i }"
+        >
+          <img [src]="slider.imagen" alt="{{ slider.title }}" class="w-full h-full rounded-3xl object-contain mx-auto my-auto" />
         </div>
       }
     </div>
+
+    <!-- Botones de Navegación -->
+    <button
+      class="absolute top-1/2 left-2 sm:left-4 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+      (click)="prevSlide()"
+    >
+      &larr;
+    </button>
+    <button
+      class="absolute top-1/2 right-2 sm:right-4 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors"
+      (click)="nextSlide()"
+    >
+      &rarr;
+    </button>
   </div>
+
+
 
   <!-- Buscador -->
   <div class="container mx-auto px-6 py-4 rounded-full sm:w-2/5 w-full">
@@ -169,4 +189,17 @@
   }
 
   <app-footer></app-footer>
+
+  <!-- Avatar Popup -->
+@if (showAvatarPopup) {
+  <div class="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50 animate-fade-in" (click)="closeAvatarPopup()">
+    <div class="bg-white rounded-lg shadow-xl w-11/12 sm:max-w-md relative">
+      <!-- Encabezado -->
+      <button class="absolute top-2 right-2 px-2 py-1 text-gray-500 hover:text-gray-700 bg-white rounded-full" (click)="closeAvatarPopup()">
+        <i class="bi bi-x-lg text-xl"></i>
+      </button>
+      <img src="{{usuario.popup}}" alt="" class="w-full">
+    </div>
+  </div>
+}
 </div>

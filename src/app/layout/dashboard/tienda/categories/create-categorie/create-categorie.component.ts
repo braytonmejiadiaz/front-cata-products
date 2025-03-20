@@ -12,20 +12,14 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./create-categorie.component.scss']
 })
 export class CreateCategorieComponent {
-
   type_categorie:number = 1;
-
   name:string = '';
-  icon:string = '';
   position:number = 1;
   categorie_second_id:string = '';
   categorie_third_id:string = '';
-
   imagen_previsualiza:any = "https://preview.keenthemes.com/metronic8/demo1/assets/media/svg/illustrations/easy/2.svg";
   file_imagen:any = null;
-
   isLoading$:any;
-
   categories_first:any = [];
   categories_seconds:any = [];
   categories_seconds_backups:any = [];
@@ -37,8 +31,6 @@ export class CreateCategorieComponent {
   }
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.isLoading$ = this.categorieService.isLoading$;
     this.config();
   }
@@ -77,18 +69,12 @@ export class CreateCategorieComponent {
 
   changeDepartamento(){
     this.categories_seconds_backups = this.categories_seconds.filter((item:any) => item.categorie_second_id == this.categorie_third_id)
-    // console.log(this.categories_seconds_backups,)
   }
 
   save(){
 
     if(!this.name || !this.position){
       this.toastr.error("Validacion","Los campos con el * son obligatorio");
-      return;
-    }
-
-    if(this.type_categorie == 1 && !this.icon){
-      this.toastr.error("Validacion","El icono es obligatoria");
       return;
     }
 
@@ -110,9 +96,6 @@ export class CreateCategorieComponent {
 
     let formData = new FormData();
     formData.append("name",this.name);
-    if(this.icon){
-      formData.append("icon",this.icon);
-    }
     formData.append("position",this.position+"");
     formData.append("type_categorie",this.type_categorie+"");
     if(this.file_imagen){
@@ -126,15 +109,11 @@ export class CreateCategorieComponent {
     }
 
     this.categorieService.createCategories(formData).subscribe((resp:any) => {
-      console.log(resp);
-
       if(resp.message == 403){
         this.toastr.error("Validacion","La categoria ya existe");
         return;
       }
-
       this.name = '';
-      this.icon = '';
       this.position = 1;
       this.type_categorie = 1;
       this.file_imagen = null;
