@@ -7,10 +7,13 @@ import { FooterComponent } from "../footer/footer.component";
 import { HeaderComponent } from "../header/header.component";
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import * as utf8 from 'utf8';
+
+
 
 @Component({
   selector: 'app-tienda-publica-carrito',
-  imports: [FormsModule, FooterComponent, HeaderComponent, CommonModule],
+  imports: [FormsModule, FooterComponent, HeaderComponent, CommonModule, ],
   templateUrl: './tienda-publica-carrito.component.html',
   styleUrl: './tienda-publica-carrito.component.scss'
 })
@@ -95,34 +98,36 @@ export class TiendaPublicaCarritoComponent {
   );
 
 
-    // Construir el mensaje con emojis en formato Unicode
-    let mensaje = `🛒 *Detalles del Pedido* 🛒\n\n`;
-    mensaje += `👦🏻 *Nombre:* ${this.nombre}\n`;
-    mensaje += `🏠 *Dirección de entrega:* ${this.direccion}\n`;
-    mensaje += `🏠 *Ciudad:* ${this.ciudad}\n`;
-    mensaje += `📞 *Teléfono:* ${this.telefono}\n`;
-    mensaje += `💳 *Método de pago:* ${this.metodoPago}\n\n`;
-    mensaje += `📦 *Productos:*\n`;
+      let mensaje = `🛒 *Detalles del Pedido* 🛒\n\n`;
+      mensaje += `👤 *Nombre:* ${this.nombre}\n`;
+      mensaje += `🏠 *Dirección de entrega:* ${this.direccion}\n`;
+      mensaje += `🌆 *Ciudad:* ${this.ciudad}\n`;
+      mensaje += `📱 *Teléfono:* ${this.telefono}\n`;
+      mensaje += `💸 *Método de pago:* ${this.metodoPago}\n\n`;
+      mensaje += `📦 *Productos:*\n`;
 
-    this.cartItems.forEach((item) => {
-      mensaje += `➡️ ${item.product.title} (${item.quantity} x ${item.product.price_cop} COP)\n`;
-    });
+      this.cartItems.forEach((item) => {
+        mensaje += `➡️ ${item.product.title} (${item.quantity} x ${item.product.price_cop} COP)\n`;
+      });
 
-    mensaje += `\n💰 *Total:* ${this.getTotal()} COP\n\n`;
-    mensaje += `📝 *Comentarios adicionales:*\n${this.comentario || "Ninguno"}\n\n`;
-    mensaje += `¡Gracias por tu compra! 🎉`;
+      mensaje += `\n💰 *Total:* ${this.getTotal()} COP\n\n`;
+      mensaje += `📝 *Comentarios adicionales:*\n${this.comentario || "Ninguno"}\n\n`;
+      mensaje += `¡Gracias por tu compra! 🎉`;
 
-    // Codificar el mensaje para la URL
-    const encodedMessage = encodeURIComponent(mensaje);
+    // Codificación especial para WhatsApp
+    const encodedMessage = this.encodeWhatsAppText(mensaje);
 
-    // Crear la URL de WhatsApp
     const url = `https://wa.me/${this.usuario.phone}?text=${encodedMessage}`;
-
-    // Abrir la URL en una nueva pestaña
     window.open(url, '_blank');
-
-    // Limpiar el carrito
     this.clearCart();
+  }
+
+  private encodeWhatsAppText(text: string): string {
+    return encodeURIComponent(text)
+      .replace(/\*/g, '%2A')  // Codificar asteriscos para mantener las negritas
+      .replace(/!/g, '%21')   // Codificar signos de exclamación
+      .replace(/\(/g, '%28')
+      .replace(/\)/g, '%29');
   }
 
   navigateCart() {

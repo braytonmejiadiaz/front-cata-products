@@ -15,20 +15,13 @@ import { ProfileUserService } from '../../../../core/profile-user/profile.servic
 export class HeaderPlantillaComponent {
   isHover = false;
   isHoverr = false;
-  phone:string = "";
-  products: any[] = [];
-  filteredProducts: any[] = [];
+  phone: string = "";
   slug: string | null = null;
-  search: string = '';
-  searchSubject = new Subject<string>();
   usuario: any = {};
-  marcas: any[] = [];
-  marca_id: string = '';
-  categorie_first_id: string | null = null;
-  categories_first: any[] = [];
-  selectedCategory: string | null = null;
-  sliders: any[] = [];
   mobileMenuOpen = false;
+
+  // Configuración de caché (8 horas por defecto)
+  private CACHE_EXPIRATION_TIME = 24400000;
 
   constructor(
     private toast: ToastrService,
@@ -37,6 +30,33 @@ export class HeaderPlantillaComponent {
     private profile: ProfileUserService
   ) {}
 
+  // Métodos de caché
+  private getCacheKey(prefix: string): string {
+    return `${prefix}_header_plantilla`;
+  }
+
+  private getFromCache(key: string): any {
+    const cachedData = localStorage.getItem(key);
+    if (!cachedData) return null;
+
+    const { data, timestamp } = JSON.parse(cachedData);
+    const now = new Date().getTime();
+
+    if (now - timestamp > this.CACHE_EXPIRATION_TIME) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return data;
+  }
+
+  private saveToCache(key: string, data: any): void {
+    const cacheData = {
+      data,
+      timestamp: new Date().getTime()
+    };
+    localStorage.setItem(key, JSON.stringify(cacheData));
+  }
 
   toggleMobileMenu() {
     this.mobileMenuOpen = !this.mobileMenuOpen;
@@ -47,30 +67,35 @@ export class HeaderPlantillaComponent {
   }
 
   getUserInfo() {
+    const cacheKey = this.getCacheKey('user_info');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.usuario = cachedData;
+      console.log('Datos de usuario cargados desde caché', this.usuario);
+      return;
+    }
+
     this.profile.showUsers().subscribe(
       (response: any) => {
         this.usuario = response;
-        console.log(this.usuario)
+        this.saveToCache(cacheKey, response);
+        console.log('Datos de usuario obtenidos del servidor', this.usuario);
       },
       (error) => {
         this.toast.error('Error al cargar la información del usuario');
       }
     );
   }
-
-  goToProduct(productId: number) {
-    const slug = this.route.snapshot.paramMap.get('slug');
-    this.router.navigate(['/tienda', slug, 'producto', productId]);
-  }
   goToHome() {
-      this.router.navigate(['/dashboard/mi-tienda/ecommerce']);
+    this.router.navigate(['/dashboard/mi-tienda/ecommerce']);
   }
-  goToAboutUs(){
+
+  goToAboutUs() {
     this.router.navigate(['/dashboard/mi-tienda/nosotros']);
   }
 
-  navigateCart(){
+  navigateCart() {
     this.router.navigate(['/dashboard/mi-tienda/ecommerce/carrito']);
   }
-
 }

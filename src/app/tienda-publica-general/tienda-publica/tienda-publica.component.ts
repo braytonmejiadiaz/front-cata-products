@@ -11,7 +11,7 @@ import { CartService } from '../../layout/dashboard/plantilla-ecommerce/cart.ser
 
 @Component({
   selector: 'app-tienda-publica',
-  imports: [CommonModule, FormsModule, FooterComponent, HeaderComponent, ],
+  imports: [CommonModule, FormsModule, FooterComponent, HeaderComponent],
   templateUrl: './tienda-publica.component.html',
   styleUrl: './tienda-publica.component.scss'
 })
@@ -37,6 +37,9 @@ export class TiendaPublicaComponent {
   public currentIndex = 0;
   public intervalId: any;
 
+  // Tiempo de vida del caché en milisegundos (4 horas)
+  private CACHE_EXPIRATION_TIME = 14400000;
+
   constructor(
     private publicService: Tiendaservice,
     private toast: ToastrService,
@@ -44,6 +47,45 @@ export class TiendaPublicaComponent {
     private router: Router,
     public cartService: CartService,
   ) {}
+
+  // Métodos de caché
+  private getCacheKey(prefix: string): string {
+    return `${prefix}_${this.slug}`;
+  }
+
+  private getFromCache(key: string): any {
+    const cachedData = localStorage.getItem(key);
+    if (!cachedData) return null;
+
+    const { data, timestamp } = JSON.parse(cachedData);
+    const now = new Date().getTime();
+
+    if (now - timestamp > this.CACHE_EXPIRATION_TIME) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return data;
+  }
+
+  private saveToCache(key: string, data: any): void {
+    const cacheData = {
+      data,
+      timestamp: new Date().getTime()
+    };
+    localStorage.setItem(key, JSON.stringify(cacheData));
+  }
+
+  private clearCacheForStore(): void {
+    const keys = [
+      this.getCacheKey('tienda_usuario'),
+      this.getCacheKey('tienda_categorias'),
+      this.getCacheKey('tienda_sliders'),
+      this.getCacheKey('tienda_usuario_data')
+    ];
+
+    keys.forEach(key => localStorage.removeItem(key));
+  }
 
   // Método para verificar si un producto está en el carrito
   isProductInCart(product: any): boolean {
@@ -53,7 +95,7 @@ export class TiendaPublicaComponent {
 
   closeAvatarPopup() {
     this.showAvatarPopup = false;
-    this.updatePopupCache(); // Actualizar caché al cerrar manualmente
+    this.updatePopupCache();
   }
 
   private updatePopupCache() {
@@ -95,26 +137,38 @@ export class TiendaPublicaComponent {
   }
 
   obtenerDatosUsuario(slug: string) {
+    const cacheKey = this.getCacheKey('tienda_usuario_data');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.usuario = cachedData;
+      return;
+    }
+
     this.publicService.getDataUsuario(slug).subscribe(
       (data: any) => {
         this.usuario = data;
+        this.saveToCache(cacheKey, data);
       },
       (error: any) => {
+        console.error('Error al cargar datos del usuario', error);
       }
     );
   }
 
   loadTiendaUsuario(slug: string) {
+    const cacheKey = this.getCacheKey('tienda_usuario');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.processTiendaData(cachedData);
+      return;
+    }
+
     this.publicService.getTiendaUsuario(slug).subscribe(
       (resp: any) => {
-        if (resp && resp.productos && resp.productos.data) {
-          this.products = resp.productos.data; // Accede a resp.productos.data
-          this.filteredProducts = this.products; // Inicializa filteredProducts
-          this.loadCategoriesByUserSlug(slug); // Cargar categorías después de obtener los productos
-        } else {
-          this.products = [];
-          this.filteredProducts = [];
-        }
+        this.processTiendaData(resp);
+        this.saveToCache(cacheKey, resp);
       },
       (err: any) => {
         this.toast.error('Error al cargar la tienda', err.error.message);
@@ -123,13 +177,30 @@ export class TiendaPublicaComponent {
     );
   }
 
+  private processTiendaData(resp: any) {
+    if (resp && resp.productos && resp.productos.data) {
+      this.products = resp.productos.data;
+      this.filteredProducts = this.products;
+      this.loadCategoriesByUserSlug(this.slug!);
+    } else {
+      this.products = [];
+      this.filteredProducts = [];
+    }
+  }
+
   loadCategoriesByUserSlug(slug: string) {
+    const cacheKey = this.getCacheKey('tienda_categorias');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.processCategoriesData(cachedData);
+      return;
+    }
+
     this.publicService.getCategoriesByUserSlug(slug).subscribe(
       (resp: any) => {
-        // Filtrar categorías que tienen productos
-        this.categories_first = resp.filter((category: any) => {
-          return this.products.some((product) => product.categorie_first_id === category.id);
-        });
+        this.processCategoriesData(resp);
+        this.saveToCache(cacheKey, resp);
       },
       (err: any) => {
         this.toast.error('Error al cargar las categorías', err.error.message);
@@ -137,16 +208,34 @@ export class TiendaPublicaComponent {
     );
   }
 
+  private processCategoriesData(resp: any) {
+    this.categories_first = resp.filter((category: any) => {
+      return this.products.some((product) => product.categorie_first_id === category.id);
+    });
+  }
+
   loadSlidersByUserSlug(slug: string) {
+    const cacheKey = this.getCacheKey('tienda_sliders');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.sliders = cachedData;
+      return;
+    }
+
     this.publicService.getSlidersByUserSlug(slug).subscribe(
       (resp: any) => {
         this.sliders = resp;
+        this.saveToCache(cacheKey, resp);
       },
       (err: any) => {
         this.toast.error('Error al cargar los sliders', err.error.message || 'Error desconocido');
       }
     );
   }
+
+  // Resto de los métodos permanecen igual...
+  // [Mantén aquí todos los demás métodos sin cambios]
 
   // Filtra productos por categoría
   filterByCategory(categoryId: string | null) {
@@ -222,37 +311,28 @@ export class TiendaPublicaComponent {
     }, 0);
   }
 
-
-
   // slider
-
-
   ngOnDestroy(): void {
-    this.stopAutoSlide(); // Detener el carrusel al destruir el componente
+    this.stopAutoSlide();
   }
 
-  // Cambiar al siguiente slide
   public nextSlide(): void {
     this.currentIndex = (this.currentIndex + 1) % this.sliders.length;
   }
 
-  // Cambiar al slide anterior
   public prevSlide(): void {
     this.currentIndex = (this.currentIndex - 1 + this.sliders.length) % this.sliders.length;
   }
 
-  // Iniciar el cambio automático
   public startAutoSlide(): void {
     this.intervalId = setInterval(() => {
       this.nextSlide();
-    }, 5000); // Cambiar cada 5 segundos
+    }, 5000);
   }
 
-  // Detener el cambio automático
   public stopAutoSlide(): void {
     if (this.intervalId) {
       clearInterval(this.intervalId);
     }
   }
-
 }

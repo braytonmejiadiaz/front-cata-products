@@ -47,19 +47,10 @@
           class="flex items-center px-4 py-3 text-base text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
           (click)="onLinkClick()"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m1-10V9a1 1 0 00-1-1h-3m-6 0a1 1 0 011-1h11a1 1 0 011 1v2.284m-1.592 4.291A3 3 0 0112 19.584m-3.418-.592a3 3 0 01-2.174-2.457m2.457.592a3 3 0 012.174 2.457m.318-.592a3 3 0 012.495-2.174m-.318.592a3 3 0 01-2.495 2.174"
-            />
-          </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-check" viewBox="0 0 16 16">
+          <path d="M11.354 6.354a.5.5 0 0 0-.708-.708L8 8.293 6.854 7.146a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
+          <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1zm3.915 10L3.102 4h10.796l-1.313 7zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0m7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+        </svg>
           <span class="ml-3">Ventas</span>
         </a>
       </div>
@@ -147,13 +138,13 @@
             (click)="onLinkClick()"
             >Lista de productos</a
           >
-          <a
+          <!-- <a
             routerLink="/dashboard/importar-productos"
             routerLinkActive="bg-[#009974] text-white"
             class="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-200 hover:text-gray-900"
             (click)="onLinkClick()"
             >Subir masivamente</a
-          >
+          > -->
         </div>
       </div>
 

@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router,  } from '@angular/router';
 import { HeaderPlantillaComponent } from "../header-plantilla/header.component";
+import { FooterPlantillaComponent } from "../footer-plantilla/footer.component";
 
 @Component({
   selector: 'app-carrito',
-  imports: [CommonModule, FormsModule, HeaderPlantillaComponent],
+  imports: [CommonModule, FormsModule, HeaderPlantillaComponent, FooterPlantillaComponent],
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.scss'
 })

@@ -31,14 +31,44 @@ export class HomeComponent {
   public currentIndex = 0;
   public intervalId: any;
 
+  // Configuración de caché (8 horas por defecto)
+  private CACHE_EXPIRATION_TIME = 24400000;
+
   constructor(
     public productService: ProductService,
     private toast: ToastrService,
     private slidersService: SlidersService,
     private router: Router,
     private profile: ProfileUserService
-
   ) {}
+
+  // Métodos de caché
+  private getCacheKey(prefix: string): string {
+    return `${prefix}_home`;
+  }
+
+  private getFromCache(key: string): any {
+    const cachedData = localStorage.getItem(key);
+    if (!cachedData) return null;
+
+    const { data, timestamp } = JSON.parse(cachedData);
+    const now = new Date().getTime();
+
+    if (now - timestamp > this.CACHE_EXPIRATION_TIME) {
+      localStorage.removeItem(key);
+      return null;
+    }
+
+    return data;
+  }
+
+  private saveToCache(key: string, data: any): void {
+    const cacheData = {
+      data,
+      timestamp: new Date().getTime()
+    };
+    localStorage.setItem(key, JSON.stringify(cacheData));
+  }
 
   ngOnInit(): void {
     this.getUserInfo();
@@ -47,31 +77,47 @@ export class HomeComponent {
     this.configAll();
     this.loadSliders();
 
-    //buscador automático
+    // Buscador automático
     this.searchSubject
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(() => {
         this.filterProducts();
       });
-
   }
 
   getUserInfo() {
+    const cacheKey = this.getCacheKey('user_info');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.usuario = cachedData;
+      return;
+    }
+
     this.profile.showUsers().subscribe(
       (response: any) => {
         this.usuario = response;
-        console.log(this.usuario)
+        this.saveToCache(cacheKey, response);
       },
       (error) => {
         this.toast.error('Error al cargar la información del usuario');
       }
     );
   }
-  // Método para cargar los sliders
+
   loadSliders() {
+    const cacheKey = this.getCacheKey('sliders');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.sliders = cachedData;
+      return;
+    }
+
     this.slidersService.listSliders(1, '').subscribe(
       (resp: any) => {
         this.sliders = resp.sliders;
+        this.saveToCache(cacheKey, resp.sliders);
       },
       (err: any) => {
         this.toast.error('Error al cargar los sliders', err.error.message);
@@ -80,14 +126,33 @@ export class HomeComponent {
   }
 
   configAll() {
+    const cacheKey = this.getCacheKey('config');
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.marcas = cachedData.brands;
+      this.categories_first = [{ id: null, name: 'Todos' }, ...cachedData.categories_first];
+      return;
+    }
+
     this.productService.configAll().subscribe((resp: any) => {
       this.marcas = resp.brands;
       this.categories_first = resp.categories_first;
       this.categories_first = [{ id: null, name: 'Todos' }, ...this.categories_first];
+      this.saveToCache(cacheKey, { brands: resp.brands, categories_first: resp.categories_first });
     });
   }
 
   listProducts(page: number = 1) {
+    const cacheKey = this.getCacheKey(`products_${page}_${this.search}_${this.marca_id}_${this.categorie_first_id}`);
+    const cachedData = this.getFromCache(cacheKey);
+
+    if (cachedData) {
+      this.products = cachedData.products;
+      this.filteredProducts = cachedData.products;
+      return;
+    }
+
     const data = {
       search: this.search,
       brand_id: this.marca_id,
@@ -98,6 +163,7 @@ export class HomeComponent {
       (resp: any) => {
         this.products = resp.products.data;
         this.filteredProducts = this.products;
+        this.saveToCache(cacheKey, { products: resp.products.data });
       },
       (err: any) => {
         this.toast.error('Error al cargar los productos', err.error.message);
@@ -105,10 +171,9 @@ export class HomeComponent {
     );
   }
 
-  // Filtra productos por categoría
+  // Resto de los métodos permanecen igual...
   filterByCategory(categoryId: string | null) {
     this.selectedCategory = categoryId;
-
     if (categoryId) {
       this.filteredProducts = this.products.filter(
         (product) => product.categorie_first_id === categoryId
@@ -118,7 +183,6 @@ export class HomeComponent {
     }
   }
 
-  // Filtra productos por búsqueda
   filterProducts() {
     if (this.search) {
       this.filteredProducts = this.products.filter((product) =>
@@ -129,47 +193,39 @@ export class HomeComponent {
     }
   }
 
-  // Escucha cambios en el buscador
   onSearchChange() {
     this.searchSubject.next(this.search);
   }
+
   goToProduct(productId: number) {
     this.router.navigate(['/dashboard/mi-tienda/ecommerce/producto', productId]);
   }
 
-
-  navigateCart(){
+  navigateCart() {
     this.router.navigate(['/dashboard/mi-tienda/ecommerce/carrito']);
   }
 
-    // slider
+  ngOnDestroy(): void {
+    this.stopAutoSlide();
+  }
 
+  public nextSlide(): void {
+    this.currentIndex = (this.currentIndex + 1) % this.sliders.length;
+  }
 
-    ngOnDestroy(): void {
-      this.stopAutoSlide(); // Detener el carrusel al destruir el componente
+  public prevSlide(): void {
+    this.currentIndex = (this.currentIndex - 1 + this.sliders.length) % this.sliders.length;
+  }
+
+  public startAutoSlide(): void {
+    this.intervalId = setInterval(() => {
+      this.nextSlide();
+    }, 5000);
+  }
+
+  public stopAutoSlide(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
-
-    // Cambiar al siguiente slide
-    public nextSlide(): void {
-      this.currentIndex = (this.currentIndex + 1) % this.sliders.length;
-    }
-
-    // Cambiar al slide anterior
-    public prevSlide(): void {
-      this.currentIndex = (this.currentIndex - 1 + this.sliders.length) % this.sliders.length;
-    }
-
-    // Iniciar el cambio automático
-    public startAutoSlide(): void {
-      this.intervalId = setInterval(() => {
-        this.nextSlide();
-      }, 5000); // Cambiar cada 5 segundos
-    }
-
-    // Detener el cambio automático
-    public stopAutoSlide(): void {
-      if (this.intervalId) {
-        clearInterval(this.intervalId);
-      }
-    }
+  }
 }
