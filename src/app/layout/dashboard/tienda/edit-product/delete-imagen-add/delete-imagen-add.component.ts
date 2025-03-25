@@ -2,16 +2,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { ProductService } from '../../service/product.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-delete-imagen-add',
+  imports:[CommonModule],
   templateUrl: './delete-imagen-add.component.html',
   styleUrls: ['./delete-imagen-add.component.scss']
 })
 export class DeleteImagenAddComponent {
 
   @Input() id:any;
-  
+
   @Output() ImagenD: EventEmitter<any> = new EventEmitter();
   isLoading:any;
   constructor(
@@ -19,7 +21,7 @@ export class DeleteImagenAddComponent {
     private toastr: ToastrService,
     public modal: NgbActiveModal,
   ) {
-    
+
   }
 
   ngOnInit(): void {

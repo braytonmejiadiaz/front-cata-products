@@ -26,7 +26,9 @@ export const routes: Routes = [
   },
   {
     path: 'tienda/:slug',
-    component: TiendaPublicaComponent
+    component: TiendaPublicaComponent,
+
+
   },
   {
     path: 'tienda/:slug/producto/:id',
