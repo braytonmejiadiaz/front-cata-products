@@ -7,19 +7,25 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CartService } from '../cart.service';
+import { HeaderPlantillaComponent } from "../header-plantilla/header.component";
+import { ProfileUserService } from '../../../../core/profile-user/profile.service';
+import { FooterPlantillaComponent } from "../footer-plantilla/footer.component";
 
 @Component({
   selector: 'app-product-detail',
-  imports: [CommonModule, RouterModule, FormsModule ],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderPlantillaComponent, FooterPlantillaComponent],
   templateUrl: './product-detail.component.html',
   styleUrl: './product-detail.component.scss'
 })
 export class ProductDetailComponent implements OnInit{
-
+  usuario: any = {};
   productId: string | null = null;
   product: any = null;
   isLoading: boolean = true;
   quantity: number = 1;
+  showImagePopup: boolean = false;
+  selectedImage: string | null = null;
+  selectedVariation: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,9 +33,22 @@ export class ProductDetailComponent implements OnInit{
     private toastr: ToastrService,
     private cartService: CartService,
     private routing: Router,
+    private profile: ProfileUserService
   ) {}
 
+  selectImage(imageUrl: string) {
+    this.selectedImage = imageUrl;
+  }
+
+  openImagePopup() {
+    this.showImagePopup = true;
+  }
+
+  closeImagePopup() {
+    this.showImagePopup = false;
+  }
   ngOnInit(): void {
+    this.getUserInfo();
     this.productId = this.route.snapshot.paramMap.get('id');
 
     if (this.productId) {
@@ -37,6 +56,16 @@ export class ProductDetailComponent implements OnInit{
     } else {
       this.toastr.error('ID de producto no válido');
     }
+  }
+  getUserInfo() {
+    this.profile.showUsers().subscribe(
+      (response: any) => {
+        this.usuario = response;
+        console.log(this.usuario)
+      },
+      (error) => {
+      }
+    );
   }
 
   loadProductDetails(productId: string): void {

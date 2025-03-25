@@ -1,66 +1,98 @@
-<div class="overflow-auto h-screen lg:p-8 bg-gray-100">
+<div class="overflow-auto h-screen lg:p-8 flex flex-col bg-white">
+  <div class="bg-[#F3F3F2] w-full shadow-sm  h-[100%] overflow-auto">
+  <app-header-plantilla class="flex-shrink-0"></app-header-plantilla>
+  <div class="pt-20"></div>
 
-  <div class="w-full bg-white shadow-lg rounded-xl h-[100%] overflow-auto">
+  <!-- Popup de Imagen -->
 
-    <header class="bg-white shadow-md">
-      <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-        <!-- Logo -->
-        <div class="text-2xl font-bold text-gray-800">Boutique Roo</div>
-
-        <!-- Menú Impactante -->
-        <nav class="hidden md:flex gap-6 items-center">
-          <a href="#" class="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
-            <i class="bi bi-house-door text-lg"></i>
-            <span>Inicio</span>
-          </a>
-          <a href="#" class="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
-            <i class="bi bi-info-circle text-lg"></i>
-            <span>Quiénes Somos</span>
-          </a>
-          <a href="#" class="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
-            <i class="bi bi-envelope text-lg"></i>
-            <span>Contacto</span>
-          </a>
-        </nav>
-
-        <!-- Carrito con Icono -->
-        <button class="p-2 text-gray-700 hover:text-gray-900 transition-colors"  (click)="navigateCart()"
-        >
-          <i class="bi bi-cart text-2xl"></i>
+  <div *ngIf="showImagePopup"
+    class="fixed inset-0 z-50 bg-black/50 bg-opacity-75 flex items-center justify-center p-4"
+    (click)="closeImagePopup()">
+    <div class="relative max-w-4xl md:max-w-3xl lg:max-w-4xl w-full max-h-[75vh] flex items-center justify-center mx-4 md:mx-8 lg:mx-0">
+      <div class="relative">
+        <img [src]="selectedImage || product.imagen"
+          alt="{{ product.title }}"
+          class="max-w-full max-h-170 object-contain mx-auto rounded-lg"
+          (click)="$event.stopPropagation()">
+        <button class="absolute top-0 right-0 text-white text-2xl hover:text-gray-300 py-1 px-3 bg-gray-600 rounded-full"
+          (click)="closeImagePopup()">
+          &times;
         </button>
       </div>
-    </header>
+    </div>
+  </div>
 
+  <!-- Contenido Principal -->
+  <main class="flex-grow">
     @if (isLoading) {
-      <!-- Muestra un spinner mientras se cargan los datos -->
+      <!-- Spinner de carga -->
       <div class="flex justify-center items-center h-96">
         <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     } @else if (product) {
       <!-- Detalles del producto -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-        <!-- Imagen del Producto -->
-        <div class="flex items-center justify-center">
+      <div class="w-3/4 mx-auto w-full sm:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8 p-8 mb-16 bg-white rounded-lg">
+        <!-- Imagen del producto y miniaturas -->
+        <div class="flex flex-col items-center">
+          <!-- Imagen principal -->
           <img
-            [src]="product.imagen"
+            [src]="selectedImage || product.imagen"
             alt="{{ product.title }}"
-            class="w-full h-auto max-h-96 object-cover rounded-lg shadow-md"
+            class="w-full h-auto max-h-96 object-cover rounded-lg shadow-md cursor-pointer"
+            (click)="openImagePopup()"
           />
+
+          <!-- Miniaturas de imágenes adicionales -->
+          <div class="flex gap-4 mt-4 overflow-x-auto">
+            @for (imagen of product.images; track $index) {
+              <img
+                [src]="imagen.imagen"
+                alt="Imagen adicional {{ $index + 1 }}"
+                class="w-20 h-20 object-cover rounded-lg shadow-md cursor-pointer"
+                (click)="selectImage(imagen.imagen)"
+                [ngClass]="{'border-2 border-blue-500': selectedImage === imagen.imagen}"
+              />
+            }
+          </div>
         </div>
 
-        <!-- Información del Producto -->
+        <!-- Información del producto -->
         <div class="space-y-6">
           <h1 class="text-3xl font-bold text-gray-900">{{ product.title }}</h1>
-
-
           <div class="space-y-2">
-            <p class="text-gray-700 text-xl font-semibold">{{ product.price_cop }} COP</p>
+            <p class="text-gray-700 text-xl font-semibold">{{ product.price_cop | currency:'COP':'symbol-narrow':'1.0-0' }} COP</p>
           </div>
+
           <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
 
-          <!-- Selector de Cantidad -->
-          <div class="mt-6">
-            <label for="quantity" class="block text-gray-700 font-semibold mb-2">Cantidad:</label>
+          <!-- Selector de variaciones -->
+          @if (product.variations && product.variations.length > 0) {
+            <div class="space-y-2">
+              <label for="variation" class="block text-gray-700 font-semibold mb-2">Variación:</label>
+              <div class="relative">
+                <select
+                  id="variation"
+                  [(ngModel)]="selectedVariation"
+                  class="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                >
+                  @for (variation of product.variations; track $index) {
+                    <option [ngValue]="variation">
+                      {{ variation.propertie.name }} - {{ variation.add_price | currency:'COP':'symbol-narrow':'1.0-0' }}
+                    </option>
+                  }
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Selector de cantidad -->
+          <label for="quantity" class="block text-gray-700 font-semibold mb-2">Cantidad:</label>
+          <div class="flex flex-wrap gap-8">
             <div class="flex items-center gap-4">
               <button
                 (click)="decreaseQuantity()"
@@ -82,19 +114,21 @@
                 +
               </button>
             </div>
-          </div>
 
-          <!-- Botones de Acción -->
-          <div class="mt-6 flex flex-col md:flex-row gap-4">
             <button
               (click)="addToCart(product, quantity)"
-              class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md"
+              class="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg transition-colors cursor-pointer shadow-md"
+              [ngStyle]="{'background-color': usuario.button_color}"
             >
               Añadir al carrito ({{ quantity }})
             </button>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="mt-6 flex flex-col md:flex-row gap-4">
             <button
               (click)="buyOnWhatsApp(product, quantity)"
-              class="w-full md:w-auto px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors shadow-md flex items-center justify-center gap-2"
+              class="w-full md:w-auto px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 cursor-pointer transition-colors shadow-md flex items-center justify-center gap-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                 <path d="M19.077 4.928C17.191 3.041 14.683 2 12 2 6.486 2 2 6.486 2 12c0 1.797.5 3.574 1.441 5.111L2 22l5.006-1.441C8.574 21.5 10.351 22 12 22c5.514 0 10-4.486 10-10 0-2.683-1.041-5.191-2.923-7.072zm-7.077 11.72h-.008v-.008h.008v.008zm4.24-8.24c-.297 0-.672.224-.672.672v4.464c0 .448.376.672.672.672.297 0 .672-.224.672-.672V8.88c0-.448-.376-.672-.672-.672zm-8.48 0c-.297 0-.672.224-.672.672v4.464c0 .448.376.672.672.672.297 0 .672-.224.672-.672V8.88c0-.448-.376-.672-.672-.672z"/>
@@ -102,6 +136,17 @@
               Comprar por WhatsApp ({{ quantity }})
             </button>
           </div>
+          <p class="text-gray-600 leading-relaxed">
+            <span class="font-bold">Marca:</span>
+            {{ product.brand.name }}
+          </p>
+
+          <span class="font-bold text-gray-600">Etiquetas:</span>
+          @for (tag of product.tags; track $index) {
+            <span class="text-gray-600">
+              {{ tag.item_text }}
+            </span>
+          }
         </div>
       </div>
     } @else {
@@ -110,69 +155,8 @@
         <p class="text-gray-600 text-xl">No se encontraron detalles del producto.</p>
       </div>
     }
+  </main>
 
-
-
-
-            <!-- Footer -->
-      <footer class="bg-gray-800 text-white mt-8">
-        <div class="container mx-auto px-6 py-8">
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Sección de Información de la Empresa -->
-            <div>
-              <h3 class="text-lg font-bold mb-4">Boutique Roo</h3>
-              <p class="text-gray-400">Somos una tienda en línea dedicada a ofrecer los mejores productos con la más alta calidad y al mejor precio.</p>
-            </div>
-
-            <!-- Sección de Enlaces Rápidos -->
-            <div>
-              <h3 class="text-lg font-bold mb-4">Enlaces Rápidos</h3>
-              <ul class="space-y-2">
-                <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Inicio</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Quiénes Somos</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contacto</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Términos y Condiciones</a></li>
-                <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Política de Privacidad</a></li>
-              </ul>
-            </div>
-
-            <!-- Sección de Contacto -->
-            <div>
-              <h3 class="text-lg font-bold mb-4">Contacto</h3>
-              <ul class="space-y-2">
-                <li class="text-gray-400"><i class="bi bi-geo-alt-fill mr-2"></i>Av. Ejemplo 123, Lima, Perú</li>
-                <li class="text-gray-400"><i class="bi bi-telephone-fill mr-2"></i>+51 123 456 789</li>
-                <li class="text-gray-400"><i class="bi bi-envelope-fill mr-2"></i>info.boutiqueroo.com</li>
-              </ul>
-            </div>
-
-            <!-- Sección de Redes Sociales y Boletín -->
-            <div>
-              <h3 class="text-lg font-bold mb-4">Síguenos</h3>
-              <div class="flex space-x-4 mb-4">
-                <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="bi bi-facebook text-2xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="bi bi-twitter text-2xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="bi bi-instagram text-2xl"></i></a>
-                <a href="#" class="text-gray-400 hover:text-white transition-colors"><i class="bi bi-linkedin text-2xl"></i></a>
-              </div>
-              <h3 class="text-lg font-bold mb-4">Boletín</h3>
-              <p class="text-gray-400 mb-2">Suscríbete para recibir las últimas novedades y ofertas.</p>
-              <form class="flex">
-                <input type="email" placeholder="Tu correo electrónico" class="w-full p-2 rounded-l-lg focus:outline-none text-gray-800">
-                <button type="submit" class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 transition-colors">Suscribirse</button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <!-- Derechos de Autor -->
-        <div class="bg-gray-900 py-4">
-          <div class="container mx-auto px-6 text-center">
-            <p class="text-gray-400">© 2023 Boutique Roo. Todos los derechos reservados.</p>
-          </div>
-        </div>
-      </footer>
-
-  </div>
-
+ <app-footer-plantilla/>
+</div>
 </div>

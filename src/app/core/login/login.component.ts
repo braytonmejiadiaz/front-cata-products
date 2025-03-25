@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
@@ -20,6 +20,7 @@ export class LoginComponent {
       private authService: LoginService,
       public router: Router,
       public activedRoute: ActivatedRoute,
+
   ) {
       this.loginForm = this.fb.group({
           email: ['', [Validators.required, Validators.email]],
@@ -39,7 +40,7 @@ export class LoginComponent {
         if (resp === true) {
           this.toastr.success("Éxito", 'Bienvenido a la tienda');
           setTimeout(() => {
-            this.router.navigateByUrl("/dashboard/estadisticas");
+            this.router.navigateByUrl("/dashboard/ventas");
           }, 500);
         } else {
           this.toastr.error("Error", 'Credenciales incorrectas');

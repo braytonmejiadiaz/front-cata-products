@@ -1,13 +1,15 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { URL_SERVICIOS } from '../../../config/config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
   private cartItems = new BehaviorSubject<any[]>(this.getStoredCartItems());
-
-  constructor() {}
+  constructor(private http: HttpClient,   public router: Router) {}
 
   // Obtener los elementos del carrito
   getCartItems() {
@@ -69,4 +71,18 @@ export class CartService {
     const storedItems = sessionStorage.getItem('cartItems');
     return storedItems ? JSON.parse(storedItems) : [];
   }
+
+  savePurchase(purchaseData: any) {
+    let URL = URL_SERVICIOS + "/purchases";
+    return this.http.post( URL, purchaseData);
+  }
+
+  getPurchases() {
+    let URL = URL_SERVICIOS + "/api/purchases";
+    return this.http.get(URL, {
+        headers: {
+            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+        }
+    });
+}
 }

@@ -74,7 +74,6 @@ export class TiendaPublicaDetailProductComponent {
     this.isLoading = true;
     this.tiendaService.getProductById(productId).subscribe({
       next: (response: any) => {
-        console.log('Respuesta del backend:', response); // Verifica la respuesta
         this.product = response.product;
         this.product.tags = JSON.parse(this.product.tags);
         this.isLoading = false;

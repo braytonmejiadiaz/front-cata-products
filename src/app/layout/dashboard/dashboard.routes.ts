@@ -12,9 +12,8 @@ const dashboardRoutes: Routes = [
     component: DashboardComponent,
     children: [
       {
-        path:'estadisticas',
+        path:'ventas',
         loadComponent: () => import('../dashboard/estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent),
-
       },
       {
         path:'crear-producto',
@@ -23,7 +22,6 @@ const dashboardRoutes: Routes = [
       {
         path:'lista-productos',
         loadComponent: () => import('./tienda/list-product/list-product.component').then((m) => m.ListProductComponent),
-
       },
       {
         path:'producto/edit/:id',
@@ -37,7 +35,6 @@ const dashboardRoutes: Routes = [
       {
         path:'importar-productos',
         loadComponent: () => import('./tienda/import-product/import-product.component').then((m) => m.ImportProductComponent),
-
       },
       {
         path: 'categories',
@@ -67,7 +64,6 @@ const dashboardRoutes: Routes = [
         path: 'preferencias',
         loadChildren: () => import('./config-tienda/configTienda.routes').then((m) => m.configTiendaRoutes),
       }
-
     ]
   }
 

@@ -1,36 +1,10 @@
-<div class="overflow-auto h-screen lg:p-8 bg-gray-100">
+<div class="overflow-auto h-screen lg:p-8 bg-[#F3F3F2]">
 <div class="bg-white  h-[100%] overflow-auto rounded-lg">
 
   <!-- Header -->
-  <header class="bg-white shadow-md">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <!-- Logo -->
-      <div class="text-2xl font-bold text-gray-800">Boutique Roo</div>
+<app-header-plantilla></app-header-plantilla>
 
-      <!-- Menú Impactante -->
-      <nav class="hidden md:flex gap-6 items-center">
-        <a href="#" class="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
-          <i class="bi bi-house-door text-lg"></i>
-          <span>Inicio</span>
-        </a>
-        <a href="#" class="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
-          <i class="bi bi-info-circle text-lg"></i>
-          <span>Quiénes Somos</span>
-        </a>
-        <a href="#" class="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
-          <i class="bi bi-envelope text-lg"></i>
-          <span>Contacto</span>
-        </a>
-      </nav>
-
-      <!-- Carrito con Icono -->
-      <button class="p-2 text-gray-700 hover:text-gray-900 transition-colors" (click)="navigateCart()">
-        <i class="bi bi-cart text-2xl"></i>
-      </button>
-    </div>
-  </header>
-
-  <div class="rounded-lg p-6 ">
+  <div class="rounded-lg p-6 w-2/3 mx-auto">
     <h1 class="text-2xl font-semibold text-gray-800 mb-6">Carrito de Compras</h1>
 
     @if (cartItems.length > 0) {

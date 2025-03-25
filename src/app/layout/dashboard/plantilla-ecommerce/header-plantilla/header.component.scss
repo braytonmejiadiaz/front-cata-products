@@ -1,0 +1,26 @@
+/* Agregar estos estilos en tu CSS */
+header nav a {
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Estilos para el indicador de cantidad de items en el carrito */
+button span {
+  font-weight: bold;
+}
+
+/* Animación al hacer hover en los botones */
+header nav a:hover {
+  transform: scale(1.05);
+}
+
+/* Estilo para el botón del carrito */
+button.bi-shop {
+  background-color: #3498db; /* Puedes cambiar este color para que se ajuste al diseño */
+  padding: 8px;
+  border-radius: 50%;
+  color: white;
+}
+
+button.bi-shop:hover {
+  background-color: #2ecc71; /* Puedes cambiar este color para que se ajuste al diseño */
+}

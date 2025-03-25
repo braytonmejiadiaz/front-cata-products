@@ -3,15 +3,16 @@ import { CartService } from '../cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router,  } from '@angular/router';
+import { HeaderPlantillaComponent } from "../header-plantilla/header.component";
 
 @Component({
   selector: 'app-carrito',
-  imports: [CommonModule, FormsModule, ],
+  imports: [CommonModule, FormsModule, HeaderPlantillaComponent],
   templateUrl: './carrito.component.html',
   styleUrl: './carrito.component.scss'
 })
 export class CarritoComponent {
-  cartItems: any[] = []; // Lista de productos en el carrito
+  cartItems: any[] = [];
   nombre: string = '';
   direccion: string = '';
   telefono: string = '';

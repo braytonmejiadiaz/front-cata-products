@@ -59,7 +59,6 @@ export class TiendaPublicaCarritoComponent {
         this.usuario = data;
       },
       (error: any) => {
-        console.error('Error al obtener datos del usuario:', error);
       }
     );
   }
@@ -68,6 +67,33 @@ export class TiendaPublicaCarritoComponent {
       this.toast.error('Por favor, completa todos los campos requeridos antes de finalizar la compra.');
       return;
     }
+
+    const purchaseData = {
+      user_id: this.usuario.id,
+      items: this.cartItems.map(item => ({
+        product_id: item.product.id,
+        quantity: item.quantity
+      })),
+      total_price: this.getTotal(),
+      nombre: this.nombre,
+      direccion: this.direccion,
+      ciudad: this.ciudad,
+      telefono: this.telefono,
+      metodo_pago: this.metodoPago,
+      comentario: this.comentario
+    };
+
+
+  this.cartService.savePurchase(purchaseData).subscribe(
+      (response: any) => {
+          this.toast.success('Compra registrada con éxito');
+          this.clearCart();
+      },
+      (error: any) => {
+          this.toast.error('Error al registrar la compra');
+      }
+  );
+
 
     // Construir el mensaje con emojis en formato Unicode
     let mensaje = `🛒 *Detalles del Pedido* 🛒\n\n`;

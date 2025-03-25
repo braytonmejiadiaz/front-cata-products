@@ -1,0 +1,59 @@
+<header class="bg-white shadow-md " [ngStyle]="{'background-color':usuario.menu_color}">
+  <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+    <!-- Logo -->
+    <div class="text-2xl font-bold text-gray-800 flex space-x-5">
+      <img src="{{usuario.avatar}}" alt="Logo" (click)="goToHome()" class="cursor-pointer h-15 object-cover rounded-full border border-gray-200 shadow-sm">
+      <p class="flex items-center text-white cursor-pointer text-xl font-normal" (click)="goToHome()" >{{usuario.store_name | titlecase}}</p>
+    </div>
+
+    <!-- Navegación al lado del carrito en pantallas grandes -->
+    <div class="flex items-center gap-6">
+      <div class="hidden md:flex gap-6 items-center">
+        <a (click)="goToHome()" class="flex items-center gap-2 py-2 px-4 rounded-full text-white border transition-colors cursor-pointer hover:bg-white"
+              [ngClass]="{'text-user-menu': isHover}"
+              (mouseover)="isHover = true"
+              (mouseout)="isHover = false"
+              [style.color]="isHover ? usuario.menu_color : 'white'">
+            <i class="bi bi-house text-lg"></i>
+            <span>Inicio</span>
+        </a>
+
+        <a
+          (click)="goToAboutUs()"
+          class="flex items-center gap-2 py-2 px-4 rounded-full text-white border transition-colors cursor-pointer hover:bg-white"
+          [ngClass]="{'text-user-menu': isHoverr}"
+          (mouseover)="isHoverr = true"
+          (mouseout)="isHoverr = false"
+          [style.color]="isHoverr ? usuario.menu_color : 'white'">
+          <i class="bi bi-people text-lg"></i>
+          <span>Nosotros</span>
+        </a>
+      </div>
+
+      <!-- Botón del carrito -->
+      <button class="p-2 text-white hover:scale-105 transition-colors relative cursor-pointer" (click)="navigateCart()">
+        <i class="bi bi-shop text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Botón de menú móvil -->
+    <button class="md:hidden p-2 text-white transition-colors" (click)="toggleMobileMenu()">
+      <i class="bi bi-list text-2xl"></i>
+    </button>
+  </div>
+
+  <!-- Menú móvil -->
+  <div class="md:hidden fixed top-25 left-0 right-0 bg-white shadow-md z-40" [class]="mobileMenuOpen ? 'block' : 'hidden'"
+  [ngStyle]="{'background-color':usuario.menu_color}">
+    <nav class="flex flex-col gap-6 items-center py-4">
+      <a (click)="goToHome()" class="flex items-center gap-2 py-2 px-4 rounded-full  text-white transition-colors cursor-pointer shadow-md border">
+        <i class="bi bi-house text-lg"></i>
+        <span>Inicio</span>
+      </a>
+      <a (click)="goToAboutUs()" class="flex items-center gap-2 py-2 px-4 rounded-full  text-white transition-colors cursor-pointer shadow-md border">
+        <i class="bi bi-people text-lg"></i>
+        <span>Nosotros</span>
+      </a>
+    </nav>
+  </div>
+</header>

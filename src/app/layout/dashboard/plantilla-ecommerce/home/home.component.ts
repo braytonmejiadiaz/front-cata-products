@@ -6,10 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { SlidersService } from '../../tienda/sliders/service/sliders.service';
 import { Router, RouterModule } from '@angular/router';
+import { HeaderPlantillaComponent } from "../header-plantilla/header.component";
+import { ProfileUserService } from '../../../../core/profile-user/profile.service';
+import { FooterPlantillaComponent } from "../footer-plantilla/footer.component";
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule, RouterModule, ],
+  imports: [CommonModule, FormsModule, RouterModule, HeaderPlantillaComponent, FooterPlantillaComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -24,16 +27,22 @@ export class HomeComponent {
   categories_first: any[] = [];
   selectedCategory: string | null = null;
   sliders: any[] = [];
+  usuario: any = {};
+  public currentIndex = 0;
+  public intervalId: any;
 
   constructor(
     public productService: ProductService,
     private toast: ToastrService,
     private slidersService: SlidersService,
     private router: Router,
+    private profile: ProfileUserService
 
   ) {}
 
   ngOnInit(): void {
+    this.getUserInfo();
+    this.startAutoSlide();
     this.listProducts();
     this.configAll();
     this.loadSliders();
@@ -44,8 +53,20 @@ export class HomeComponent {
       .subscribe(() => {
         this.filterProducts();
       });
+
   }
 
+  getUserInfo() {
+    this.profile.showUsers().subscribe(
+      (response: any) => {
+        this.usuario = response;
+        console.log(this.usuario)
+      },
+      (error) => {
+        this.toast.error('Error al cargar la información del usuario');
+      }
+    );
+  }
   // Método para cargar los sliders
   loadSliders() {
     this.slidersService.listSliders(1, '').subscribe(
@@ -120,4 +141,35 @@ export class HomeComponent {
   navigateCart(){
     this.router.navigate(['/dashboard/mi-tienda/ecommerce/carrito']);
   }
+
+    // slider
+
+
+    ngOnDestroy(): void {
+      this.stopAutoSlide(); // Detener el carrusel al destruir el componente
+    }
+
+    // Cambiar al siguiente slide
+    public nextSlide(): void {
+      this.currentIndex = (this.currentIndex + 1) % this.sliders.length;
+    }
+
+    // Cambiar al slide anterior
+    public prevSlide(): void {
+      this.currentIndex = (this.currentIndex - 1 + this.sliders.length) % this.sliders.length;
+    }
+
+    // Iniciar el cambio automático
+    public startAutoSlide(): void {
+      this.intervalId = setInterval(() => {
+        this.nextSlide();
+      }, 5000); // Cambiar cada 5 segundos
+    }
+
+    // Detener el cambio automático
+    public stopAutoSlide(): void {
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+      }
+    }
 }
